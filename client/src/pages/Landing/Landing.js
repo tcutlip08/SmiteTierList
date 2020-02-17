@@ -8,8 +8,19 @@ import "./Landing.css";
 
 class Landing extends Component {
   state = {
-    gods: "",
-    tier: ""
+    tier: {
+      ss: [],
+      sp: [],
+      s: [],
+      ap: [],
+      a: [],
+      bp: [],
+      b: [],
+      c: [],
+      d: [],
+      new: [],
+      none: []
+    }
   };
 
   componentDidMount() {
@@ -17,14 +28,13 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state.tier);
+    // console.log(this.state.tier);
   }
 
   getGods() {
     axios
       .get("/api/gods")
       .then(res => {
-        this.setState({ gods: res.data });
         this.seperateGodByTier(res.data);
       })
       .catch(err => {
@@ -89,7 +99,7 @@ class Landing extends Component {
               <div id="ss-container" className="tiercontainer">
                 <div className="tier-label ss">SS</div>
                 <div id="ss" className="tier ss ">
-                  {this.state.tier.ss
+                  {this.state.tier.ss[0]
                     ? this.state.tier.ss.map(god => {
                         return <God god={god.god.name} class={god.class} />;
                       })
@@ -99,7 +109,7 @@ class Landing extends Component {
               <div id="new-container" className="tiercontainer">
                 <div className="tier-label new">New</div>
                 <div id="new" className="tier new ">
-                  {this.state.tier.new
+                  {this.state.tier.new[0]
                     ? this.state.tier.new.map(god => {
                         return <God god={god.god.name} class={god.class} />;
                       })
@@ -112,7 +122,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label splus">S+</div>
               <div id="splus" className="tier splus ">
-                {this.state.tier.sp
+                {this.state.tier.sp[0]
                   ? this.state.tier.sp.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -124,7 +134,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label s">S</div>
               <div id="s" className="tier s ">
-                {this.state.tier.s
+                {this.state.tier.s[0]
                   ? this.state.tier.s.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -136,7 +146,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label aplus">A+</div>
               <div id="aplus" className="tier aplus ">
-                {this.state.tier.ap
+                {this.state.tier.ap[0]
                   ? this.state.tier.ap.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -148,7 +158,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label a">A</div>
               <div id="a" className="tier a ">
-                {this.state.tier.a
+                {this.state.tier.a[0]
                   ? this.state.tier.a.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -160,7 +170,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label bplus">B+</div>
               <div id="bplus" className="tier bplus ">
-                {this.state.tier.bp
+                {this.state.tier.bp[0]
                   ? this.state.tier.bp.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -172,7 +182,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label b">B</div>
               <div id="b" className="tier b ">
-                {this.state.tier.b
+                {this.state.tier.b[0]
                   ? this.state.tier.b.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -184,7 +194,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label c">C</div>
               <div id="c" className="tier c ">
-                {this.state.tier.c
+                {this.state.tier.c[0]
                   ? this.state.tier.c.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -196,7 +206,7 @@ class Landing extends Component {
             <div className="tiercontainer">
               <div className="tier-label d">D</div>
               <div id="d" className="tier d ">
-                {this.state.tier.d
+                {this.state.tier.d[0]
                   ? this.state.tier.d.map(god => {
                       return <God god={god.god.name} class={god.class} />;
                     })
@@ -205,7 +215,7 @@ class Landing extends Component {
             </div>
           </Row>
           <Row id="gods" className="">
-            {this.state.tier.none
+            {this.state.tier.none[0]
               ? this.state.tier.none.map(god => {
                   return (
                     <Col>
