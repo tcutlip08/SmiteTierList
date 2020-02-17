@@ -49,7 +49,7 @@ const godsSeed = [
       "Geb",
       "Jormungandr",
       "Khepri",
-      "Kumbhakarna",
+      "Kumbakharna",
       "Kuzenbo",
       "Sobek",
       "Sylvanus",
@@ -67,7 +67,7 @@ const godsSeed = [
       "Apollo",
       "Artemis",
       "Cernunnos",
-      "Chernobog",
+      "Chernabog",
       "Chiron",
       "Cupid",
       "Hachiman",
@@ -118,7 +118,7 @@ const godsSeed = [
       "Ao Kuang",
       "Aphrodite",
       "Baron Samedi",
-      "Chang'e",
+      "Change",
       "Chronos",
       "Discordia",
       "Freya",
@@ -143,7 +143,7 @@ const godsSeed = [
       "Thoth",
       "Vulcan",
       "Zeus",
-      "Zhong Kui"
+      "Zhong Qui"
     ]
   }
 ];
