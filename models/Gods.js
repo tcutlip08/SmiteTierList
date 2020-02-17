@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const GodsSchema = new Schema({
   class: String,
-  name: [{ type: String }]
+  gods: [{ name: { type: String }, rank: { type: Array } }]
 });
 
 // This creates our model from the above schema, using mongoose's model method

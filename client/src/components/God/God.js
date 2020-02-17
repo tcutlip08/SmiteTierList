@@ -13,10 +13,7 @@ const God = props => {
           className="godimage tooltipstered"
           data-name={props.god}
           data-className={props.class}
-          alt={props.god
-            .toLowerCase()
-            .split(" ")
-            .join("")}
+          alt={props.god}
         />
       </span>
     </>
