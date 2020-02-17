@@ -16,7 +16,7 @@ app.use(routes);
 
 // Connect to the Mongo DB
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/dataBaseNameHere",
+  process.env.MONGODB_URI || "mongodb://localhost/smite_tier_list",
   {
     useUnifiedTopology: true,
     useNewUrlParser: true,
