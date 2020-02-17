@@ -16,7 +16,7 @@ const godsSeed = [
   {
     class: "Warrior",
     gods: [
-      { name: "Cu Chulainn", rank: [5, 6, 8] },
+      { name: "Cu Chulainn", rank: [5, 6, 5] },
       { name: "Sun Wukong", rank: [5, 7, 8] },
       { name: "Tyr", rank: [5, 6, 8] },
       { name: "Vamana", rank: [5, 6, 8] }
