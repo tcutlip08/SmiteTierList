@@ -19,7 +19,7 @@ const godsSeed = [
       { name: "Achilles", rank: [1] },
       { name: "Amaterasu", rank: [2] },
       { name: "Bellona", rank: [3] },
-      { name: "Chaac", rank: [4] },
+      { name: "Chaac", rank: [1,5,4] },
       { name: "Cu Chulainn", rank: [5] },
       { name: "Erlang Shen", rank: [6] },
       { name: "Guan Yu", rank: [7] },
