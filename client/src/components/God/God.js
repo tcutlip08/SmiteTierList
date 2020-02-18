@@ -13,6 +13,8 @@ const God = props => {
           className="godimage tooltipstered"
           data-name={props.god}
           data-className={props.class}
+          data-tier={props.tier}
+          data-index={props.i}
           alt={props.god}
         />
       </span>
