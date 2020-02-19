@@ -92,28 +92,61 @@ class Landing extends Component {
   }
 
   submitList = () => {
-    // axios
-    //   .post("/api/gods")
-    //   .then(res => {
-    //     console.log(res);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
+    let keys = Object.keys(this.state.tier);
+    let values = Object.values(this.state.tier);
+    for (let i = 0; i < keys.length; i++) {
+      for (let g = 0; g < values[i].length; g++) {
+        if (keys[i] === "none") {
+        } else if (keys[i] === "ss") {
+          this.updateGodTier(values[i][g], 9);
+        } else if (keys[i] === "sp") {
+          this.updateGodTier(values[i][g], 8);
+        } else if (keys[i] === "s") {
+          this.updateGodTier(values[i][g], 7);
+        } else if (keys[i] === "ap") {
+          this.updateGodTier(values[i][g], 6);
+        } else if (keys[i] === "a") {
+          this.updateGodTier(values[i][g], 5);
+        } else if (keys[i] === "bp") {
+          this.updateGodTier(values[i][g], 4);
+        } else if (keys[i] === "b") {
+          this.updateGodTier(values[i][g], 3);
+        } else if (keys[i] === "c") {
+          this.updateGodTier(values[i][g], 2);
+        } else if (keys[i] === "d") {
+          this.updateGodTier(values[i][g], 1);
+        }
+      }
+    }
+  };
+
+  updateGodTier = (data, tier) => {
+    console.log(data.class);
+    console.log(data.god.name);
+    console.log(tier);
+    axios
+      .put("/api/gods", {
+        class: data.class,
+        god: data.god.name,
+        tier: tier
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   resetList = () => {
     let tier = this.state.tier;
-    // console.log(tier);
     let keys = Object.keys(tier);
     let values = Object.values(tier);
     for (let i = 0; i < keys.length; i++) {
-      // console.log(keys[i]);
       if (keys[i] === "none") {
       } else {
         for (let g = 0; g < values[i].length; g++) {
           tier.none.push(values[i][g]);
-          // console.log(values[i][g]);
         }
       }
     }
@@ -132,8 +165,6 @@ class Landing extends Component {
         none: tier.none
       }
     });
-    console.log(tier.none);
-    // console.log(tier.none[110]);
   };
 
   render() {
@@ -141,7 +172,11 @@ class Landing extends Component {
       <Container>
         <div id="tierlist">
           <Row>
-            <button className="btn btn-primary" onClick={this.submitList}>
+            <button
+              className="btn btn-primary"
+              id="submit"
+              onClick={this.submitList}
+            >
               Submit
             </button>
           </Row>

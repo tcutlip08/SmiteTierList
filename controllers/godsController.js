@@ -19,8 +19,11 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   update: function(req, res) {
-    db.Gods.findOneAndUpdate({ _id: req.params.id }, req.body)
-      .then(dbModel => res.json(dbModel))
+    db.Gods.find({ class: req.body.class })
+      .then(dbModel => {
+        console.log(dbModel);
+        // res.json(dbModel);
+      })
       .catch(err => res.status(422).json(err));
   },
   remove: function(req, res) {
