@@ -111,29 +111,29 @@ class Landing extends Component {
       // console.log(keys[i]);
       if (keys[i] === "none") {
       } else {
-        for (let g = 0; g < keys[i].length; g++) {
-          tier.none.push(values[g]);
-          // console.log(values[g]);
+        for (let g = 0; g < values[i].length; g++) {
+          tier.none.push(values[i][g]);
+          // console.log(values[i][g]);
         }
       }
     }
-    // this.setState({
-    //   tier: {
-    //     ss: [],
-    //     sp: [],
-    //     s: [],
-    //     ap: [],
-    //     a: [],
-    //     bp: [],
-    //     b: [],
-    //     c: [],
-    //     d: [],
-    //     new: [],
-    //     none: tier.none
-    //   }
-    // });
-    console.log(tier.none[10]);
-    console.log(tier.none[110]);
+    this.setState({
+      tier: {
+        ss: [],
+        sp: [],
+        s: [],
+        ap: [],
+        a: [],
+        bp: [],
+        b: [],
+        c: [],
+        d: [],
+        new: [],
+        none: tier.none
+      }
+    });
+    console.log(tier.none);
+    // console.log(tier.none[110]);
   };
 
   render() {
