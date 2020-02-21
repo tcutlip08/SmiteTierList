@@ -24,6 +24,7 @@ class Landing extends Component {
   };
 
   componentDidMount() {
+    console.log(process.env.REACT_APP_OKTA_ORG_URL);
     this.getGods();
   }
 
@@ -35,6 +36,7 @@ class Landing extends Component {
     axios
       .get("/api/gods")
       .then(res => {
+        // console.log(res.data);
         this.seperateGodByTier(res.data);
       })
       .catch(err => {
@@ -56,87 +58,86 @@ class Landing extends Component {
       new: [],
       none: []
     };
-    for (let c = 0; c < data.length; c++) {
-      // console.log(data[c]);
-      for (let g = 0; g < data[c].gods.length; g++) {
-        let god = data[c].gods[g];
-        // console.log(god);
-        let average = 0;
-        for (let r = 0; r < god.rank.length; r++) {
-          average = average + god.rank[r];
-        }
-        if (Math.round(average / god.rank.length) === 1) {
-          tier.d.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 2) {
-          tier.c.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 3) {
-          tier.b.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 4) {
-          tier.bp.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 5) {
-          tier.a.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 6) {
-          tier.ap.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 7) {
-          tier.s.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 8) {
-          tier.sp.push({ class: data[c].class, god: god });
-        } else if (Math.round(average / god.rank.length) === 9) {
-          tier.ss.push({ class: data[c].class, god: god });
-        } else {
-          tier.none.push({ class: data[c].class, god: god });
-        }
+    for (let g = 0; g < data.length; g++) {
+      let god = data[g];
+      // console.log(god);
+      let average = 0;
+      for (let r = 0; r < god.rank.length; r++) {
+        average = average + god.rank[r];
+      }
+      if (Math.round(average / god.rank.length) === 1) {
+        tier.d.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 2) {
+        tier.c.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 3) {
+        tier.b.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 4) {
+        tier.bp.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 5) {
+        tier.a.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 6) {
+        tier.ap.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 7) {
+        tier.s.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 8) {
+        tier.sp.push({ god: god });
+      } else if (Math.round(average / god.rank.length) === 9) {
+        tier.ss.push({ god: god });
+      } else {
+        tier.none.push({ god: god });
       }
     }
     this.setState({ tier: tier });
   }
 
   submitList = () => {
+    let tier = [];
     let keys = Object.keys(this.state.tier);
     let values = Object.values(this.state.tier);
     for (let i = 0; i < keys.length; i++) {
       for (let g = 0; g < values[i].length; g++) {
         if (keys[i] === "none") {
         } else if (keys[i] === "ss") {
-          this.updateGodTier(values[i][g], 9);
+          tier.push({ data: values[i][g], tier: 9 });
         } else if (keys[i] === "sp") {
-          this.updateGodTier(values[i][g], 8);
+          tier.push({ data: values[i][g], tier: 8 });
         } else if (keys[i] === "s") {
-          this.updateGodTier(values[i][g], 7);
+          tier.push({ data: values[i][g], tier: 7 });
         } else if (keys[i] === "ap") {
-          this.updateGodTier(values[i][g], 6);
+          tier.push({ data: values[i][g], tier: 6 });
         } else if (keys[i] === "a") {
-          this.updateGodTier(values[i][g], 5);
+          tier.push({ data: values[i][g], tier: 5 });
         } else if (keys[i] === "bp") {
-          this.updateGodTier(values[i][g], 4);
+          tier.push({ data: values[i][g], tier: 4 });
         } else if (keys[i] === "b") {
-          this.updateGodTier(values[i][g], 3);
+          tier.push({ data: values[i][g], tier: 3 });
         } else if (keys[i] === "c") {
-          this.updateGodTier(values[i][g], 2);
+          tier.push({ data: values[i][g], tier: 2 });
         } else if (keys[i] === "d") {
-          this.updateGodTier(values[i][g], 1);
+          tier.push({ data: values[i][g], tier: 1 });
         }
       }
     }
+    this.updateGodTier(tier);
+    // console.log(tier);
   };
 
-  updateGodTier = (data, tier) => {
-    console.log(data.class);
-    console.log(data.god.name);
-    console.log(tier);
+  updateGodTier(tier) {
     axios
-      .put("/api/gods", {
-        class: data.class,
-        god: data.god.name,
-        tier: tier
-      })
+      .put("/api/gods", { data: tier[0] })
       .then(res => {
-        console.log(res);
+        tier.splice(0, 1);
+        if (tier[0]) {
+          this.updateGodTier(tier);
+        } else {
+          console.log(res);
+          return;
+        }
       })
       .catch(err => {
         console.log(err);
       });
-  };
+  }
 
   resetList = () => {
     let tier = this.state.tier;
@@ -195,7 +196,7 @@ class Landing extends Component {
                         return (
                           <God
                             god={god.god.name}
-                            class={god.class}
+                            class={god.god.class}
                             tier="ss"
                             i={i}
                           />
@@ -204,6 +205,8 @@ class Landing extends Component {
                     : "Empty"}
                 </div>
               </div>
+            </Col>
+            <Col>
               <div id="new-container" className="tiercontainer">
                 <div className="tier-label new">New</div>
                 <div id="new" className="tier new ">
@@ -212,7 +215,7 @@ class Landing extends Component {
                         return (
                           <God
                             god={god.god.name}
-                            class={god.class}
+                            class={god.god.class}
                             tier="new"
                             i={i}
                           />
@@ -224,7 +227,7 @@ class Landing extends Component {
             </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label splus">S+</div>
               <div id="splus" className="tier splus ">
                 {this.state.tier.sp[0]
@@ -232,7 +235,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="sp"
                           i={i}
                         />
@@ -240,10 +243,10 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label s">S</div>
               <div id="s" className="tier s ">
                 {this.state.tier.s[0]
@@ -251,7 +254,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="s"
                           i={i}
                         />
@@ -259,10 +262,10 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label aplus">A+</div>
               <div id="aplus" className="tier aplus ">
                 {this.state.tier.ap[0]
@@ -270,7 +273,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="ap"
                           i={i}
                         />
@@ -278,10 +281,10 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label a">A</div>
               <div id="a" className="tier a ">
                 {this.state.tier.a[0]
@@ -289,7 +292,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="a"
                           i={i}
                         />
@@ -297,10 +300,10 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label bplus">B+</div>
               <div id="bplus" className="tier bplus ">
                 {this.state.tier.bp[0]
@@ -308,7 +311,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="bp"
                           i={i}
                         />
@@ -316,10 +319,10 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label b">B</div>
               <div id="b" className="tier b ">
                 {this.state.tier.b[0]
@@ -327,7 +330,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="b"
                           i={i}
                         />
@@ -335,10 +338,10 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label c">C</div>
               <div id="c" className="tier c ">
                 {this.state.tier.c[0]
@@ -346,7 +349,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="c"
                           i={i}
                         />
@@ -354,10 +357,10 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
           <Row>
-            <div className="tiercontainer">
+            <Col className="tiercontainer">
               <div className="tier-label d">D</div>
               <div id="d" className="tier d ">
                 {this.state.tier.d[0]
@@ -365,7 +368,7 @@ class Landing extends Component {
                       return (
                         <God
                           god={god.god.name}
-                          class={god.class}
+                          class={god.god.class}
                           tier="d"
                           i={i}
                         />
@@ -373,24 +376,25 @@ class Landing extends Component {
                     })
                   : "Empty"}
               </div>
-            </div>
+            </Col>
           </Row>
-
           <Row id="gods" className="">
-            {this.state.tier.none[0]
-              ? this.state.tier.none.map((god, i) => {
-                  return (
-                    <Col>
-                      <God
-                        god={god.god.name}
-                        class={god.class}
-                        tier="none"
-                        i={i}
-                      />
-                    </Col>
-                  );
-                })
-              : "Empty"}
+            {this.state.tier.none[0] ? (
+              this.state.tier.none.map((god, i) => {
+                return (
+                  <Col>
+                    <God
+                      god={god.god.name}
+                      class={god.god.class}
+                      tier="none"
+                      i={i}
+                    />
+                  </Col>
+                );
+              })
+            ) : (
+              <Col>Empty</Col>
+            )}
           </Row>
           <div id="blog"></div>
         </div>

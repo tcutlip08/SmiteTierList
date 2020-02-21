@@ -1,3 +1,4 @@
 module.exports = {
-  Gods: require("./Gods")
+  Gods: require("./Gods"),
+  User: require("./User")
 };
