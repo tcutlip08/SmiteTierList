@@ -24,7 +24,7 @@ class Landing extends Component {
   };
 
   componentDidMount() {
-    console.log(process.env.REACT_APP_OKTA_ORG_URL);
+    // console.log(process.env.REACT_APP_OKTA_ORG_URL);
     this.getGods();
   }
 
@@ -36,7 +36,8 @@ class Landing extends Component {
     axios
       .get("/api/gods")
       .then(res => {
-        // console.log(res.data);
+        // console.log(res.data[0]);
+        // console.log(res.data[0].rank[0].gods[0]);
         this.seperateGodByTier(res.data);
       })
       .catch(err => {
@@ -44,7 +45,7 @@ class Landing extends Component {
       });
   }
 
-  seperateGodByTier(data) {
+  seperateGodByTier(gods) {
     let tier = {
       ss: [],
       sp: [],
@@ -58,12 +59,13 @@ class Landing extends Component {
       new: [],
       none: []
     };
-    for (let g = 0; g < data.length; g++) {
-      let god = data[g];
-      // console.log(god);
+
+    for (let g = 0; g < gods.length; g++) {
+      let god = gods[g];
       let average = 0;
       for (let r = 0; r < god.rank.length; r++) {
-        average = average + god.rank[r];
+        let rank = god.rank[r];
+        average = average + rank.gods[g].rank;
       }
       if (Math.round(average / god.rank.length) === 1) {
         tier.d.push({ god: god });

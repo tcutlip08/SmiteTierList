@@ -132,40 +132,16 @@ db.Gods.remove({})
   .then(() => db.Gods.collection.insertMany(godsSeed))
   .then(data => {
     console.log(data.result.n + " records inserted!");
-  })
-  .catch(err => {
-    console.error(err);
-    process.exit(1);
-  });
-
-const userSeed = [
-  {
-    username: "tcutlip08",
-    email: "tcutlip08@gmail.com",
-    password: "W!zkik101",
-    gods: []
-  },
-  {
-    username: "nate8cutlip",
-    email: "nate.cutlip@yahoo.com",
-    password: "NateD@Great",
-    gods: []
-  },
-  {
-    username: "JesseMan",
-    email: "Solid513@gmail.com",
-    password: "Fireball",
-    gods: []
-  }
-];
-
-db.User.remove({})
-  .then(() => db.User.collection.insertMany(userSeed))
-  .then(data => {
-    console.log(data.result.n + " records inserted!");
     process.exit(0);
   })
   .catch(err => {
     console.error(err);
     process.exit(1);
   });
+
+// db.User.remove({})
+//   .then(() => process.exit(0))
+//   .catch(err => {
+//     console.error(err);
+//     process.exit(1);
+//   });

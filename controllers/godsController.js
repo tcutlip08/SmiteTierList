@@ -3,6 +3,10 @@ const db = require("../models");
 module.exports = {
   findAll: function(req, res) {
     db.Gods.find(req.query)
+      .populate({
+        path: "rank",
+        model: "User"
+      })
       .then(dbModel => {
         res.json(dbModel);
       })
