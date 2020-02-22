@@ -20,8 +20,8 @@ const NavBar = props => {
           </Link>
         </Col>
         <Col>
-          <Link to={props.auth ? "#" : "/log-in"}>
-            <b>Log {props.auth ? "out" : "in"}</b>
+          <Link to="/log-in">
+            <b>Log In</b>
           </Link>
         </Col>
       </Row>

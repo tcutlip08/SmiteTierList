@@ -31,13 +31,26 @@ class LogIn extends Component {
     event.preventDefault();
 
     axios
-      .post("/api/user", this.state)
+      .post("/api/user/log-in", this.state)
       .then(res => {
         console.log(res);
       })
       .catch(err => {
         console.log(err);
       });
+  };
+
+  signUp = () => {
+    if (this.state.username && this.state.email && this.state.password) {
+      axios
+        .post("/api/user", this.state)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
 
   render() {
@@ -99,9 +112,12 @@ class LogIn extends Component {
                 />
               </div>
               <button className="btn btn-primary" type="submit">
-                Submit
+                Log In
               </button>
             </form>
+            <button className="btn btn-success" onClick={this.signUp}>
+              Sign Up
+            </button>
           </Col>
         </Row>
       </Container>
