@@ -1,0 +1,24 @@
+.Warrior {
+    border: solid red 2px;
+}
+
+.Assassin {
+    border: solid yellow 2px;
+}
+
+.Guardian {
+    border: solid green 2px;
+}
+
+.Mage {
+    border: solid purple 2px;
+}
+
+.Hunter {
+    border: solid orangered 2px;
+}
+
+.god-card {
+    border-radius: 50%;
+    margin: 1px;
+}

@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import God from "../../components/God/God";
+import Tier from "../../components/Tier/Tier";
 import "./Landing.css";
 
 class Landing extends Component {
@@ -173,233 +174,60 @@ class Landing extends Component {
   render() {
     return (
       <Container>
-        <div id="tierlist">
+        <div className="tierlist">
           <Row>
-            <button
-              className="btn btn-primary"
-              id="submit"
-              onClick={this.submitList}
-            >
-              Submit
-            </button>
-          </Row>
-          <Row>
-            <button className="btn btn-primary" onClick={this.resetList}>
-              Reset
-            </button>
+            <Col>
+              <button
+                className="btn btn-primary"
+                id="submit"
+                onClick={this.submitList}
+              >
+                Submit
+              </button>
+            </Col>
+            <Col>
+              <button className="btn btn-primary" onClick={this.resetList}>
+                Reset
+              </button>
+            </Col>
           </Row>
           <Row>
             <Col>
-              <div id="ss-container" className="tiercontainer">
-                <div className="tier-label ss">SS</div>
-                <div id="ss" className="tier ss ">
-                  {this.state.tier.ss[0]
-                    ? this.state.tier.ss.map((god, i) => {
-                        return (
-                          <God
-                            god={god.god.name}
-                            class={god.god.class}
-                            tier="ss"
-                            i={i}
-                          />
-                        );
-                      })
-                    : "Empty"}
-                </div>
-              </div>
-            </Col>
-            <Col>
-              <div id="new-container" className="tiercontainer">
-                <div className="tier-label new">New</div>
-                <div id="new" className="tier new ">
-                  {this.state.tier.new[0]
-                    ? this.state.tier.new.map((god, i) => {
-                        return (
-                          <God
-                            god={god.god.name}
-                            class={god.god.class}
-                            tier="new"
-                            i={i}
-                          />
-                        );
-                      })
-                    : "Empty"}
-                </div>
-              </div>
+              <Row>
+                <Tier tier="SS" array={this.state.tier.ss} width={9} />
+                <Tier tier="New" array={this.state.tier.new} width={3} />
+              </Row>
+              <Row>
+                <Tier tier="S+" array={this.state.tier.sp} width={12} />
+              </Row>
+              <Row>
+                <Tier tier="S" array={this.state.tier.s} width={12} />
+              </Row>
+              <Row>
+                <Tier tier="A+" array={this.state.tier.ap} width={12} />
+              </Row>
+              <Row>
+                <Tier tier="A" array={this.state.tier.a} width={12} />
+              </Row>
+              <Row>
+                <Tier tier="B+" array={this.state.tier.bp} width={12} />
+              </Row>
+              <Row>
+                <Tier tier="B" array={this.state.tier.b} width={12} />
+              </Row>
+              <Row>
+                <Tier tier="C" array={this.state.tier.c} width={12} />
+              </Row>
+              <Row>
+                <Tier tier="D" array={this.state.tier.d} width={12} />
+              </Row>
             </Col>
           </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label splus">S+</div>
-              <div id="splus" className="tier splus ">
-                {this.state.tier.sp[0]
-                  ? this.state.tier.sp.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="sp"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label s">S</div>
-              <div id="s" className="tier s ">
-                {this.state.tier.s[0]
-                  ? this.state.tier.s.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="s"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label aplus">A+</div>
-              <div id="aplus" className="tier aplus ">
-                {this.state.tier.ap[0]
-                  ? this.state.tier.ap.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="ap"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label a">A</div>
-              <div id="a" className="tier a ">
-                {this.state.tier.a[0]
-                  ? this.state.tier.a.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="a"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label bplus">B+</div>
-              <div id="bplus" className="tier bplus ">
-                {this.state.tier.bp[0]
-                  ? this.state.tier.bp.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="bp"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label b">B</div>
-              <div id="b" className="tier b ">
-                {this.state.tier.b[0]
-                  ? this.state.tier.b.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="b"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label c">C</div>
-              <div id="c" className="tier c ">
-                {this.state.tier.c[0]
-                  ? this.state.tier.c.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="c"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="tiercontainer">
-              <div className="tier-label d">D</div>
-              <div id="d" className="tier d ">
-                {this.state.tier.d[0]
-                  ? this.state.tier.d.map((god, i) => {
-                      return (
-                        <God
-                          god={god.god.name}
-                          class={god.god.class}
-                          tier="d"
-                          i={i}
-                        />
-                      );
-                    })
-                  : "Empty"}
-              </div>
-            </Col>
-          </Row>
-          <Row id="gods" className="">
-            {this.state.tier.none[0] ? (
-              this.state.tier.none.map((god, i) => {
-                return (
-                  <Col>
-                    <God
-                      god={god.god.name}
-                      class={god.god.class}
-                      tier="none"
-                      i={i}
-                    />
-                  </Col>
-                );
-              })
-            ) : (
-              <Col>Empty</Col>
-            )}
-          </Row>
-          <div id="blog"></div>
         </div>
+        <Row>
+          <Tier array={this.state.tier.none} width={12} />
+        </Row>
+        <div id="blog"></div>
       </Container>
     );
   }
