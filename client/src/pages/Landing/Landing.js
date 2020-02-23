@@ -174,57 +174,59 @@ class Landing extends Component {
   render() {
     return (
       <Container>
-        <div className="tierlist">
-          <Row>
-            <Col>
-              <button
-                className="btn btn-primary"
-                id="submit"
-                onClick={this.submitList}
-              >
-                Submit
-              </button>
-            </Col>
-            <Col>
-              <button className="btn btn-primary" onClick={this.resetList}>
-                Reset
-              </button>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Row>
-                <Tier tier="SS" array={this.state.tier.ss} width={9} />
-                <Tier tier="New" array={this.state.tier.new} width={3} />
-              </Row>
-              <Row>
-                <Tier tier="S+" array={this.state.tier.sp} width={12} />
-              </Row>
-              <Row>
-                <Tier tier="S" array={this.state.tier.s} width={12} />
-              </Row>
-              <Row>
-                <Tier tier="A+" array={this.state.tier.ap} width={12} />
-              </Row>
-              <Row>
-                <Tier tier="A" array={this.state.tier.a} width={12} />
-              </Row>
-              <Row>
-                <Tier tier="B+" array={this.state.tier.bp} width={12} />
-              </Row>
-              <Row>
-                <Tier tier="B" array={this.state.tier.b} width={12} />
-              </Row>
-              <Row>
-                <Tier tier="C" array={this.state.tier.c} width={12} />
-              </Row>
-              <Row>
-                <Tier tier="D" array={this.state.tier.d} width={12} />
-              </Row>
-            </Col>
-          </Row>
-        </div>
-        <Row>
+        <Row className="tierlist">
+          <Col>
+            <Row>
+              <Col>
+                <button
+                  className="btn btn-primary"
+                  id="submit"
+                  onClick={this.submitList}
+                >
+                  Submit
+                </button>
+              </Col>
+              <Col>
+                <button className="btn btn-primary" onClick={this.resetList}>
+                  Reset
+                </button>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Row>
+                  <Tier tier="SS" array={this.state.tier.ss} width={9} />
+                  <Tier tier="New" array={this.state.tier.new} width={3} />
+                </Row>
+                <Row>
+                  <Tier tier="S+" array={this.state.tier.sp} width={12} />
+                </Row>
+                <Row>
+                  <Tier tier="S" array={this.state.tier.s} width={12} />
+                </Row>
+                <Row>
+                  <Tier tier="A+" array={this.state.tier.ap} width={12} />
+                </Row>
+                <Row>
+                  <Tier tier="A" array={this.state.tier.a} width={12} />
+                </Row>
+                <Row>
+                  <Tier tier="B+" array={this.state.tier.bp} width={12} />
+                </Row>
+                <Row>
+                  <Tier tier="B" array={this.state.tier.b} width={12} />
+                </Row>
+                <Row>
+                  <Tier tier="C" array={this.state.tier.c} width={12} />
+                </Row>
+                <Row>
+                  <Tier tier="D" array={this.state.tier.d} width={12} />
+                </Row>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <Row className="none">
           <Tier array={this.state.tier.none} width={12} />
         </Row>
         <div id="blog"></div>
