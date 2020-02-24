@@ -7,11 +7,11 @@ import "./Tier.css";
 const Tier = props => {
   return (
     <>
-      <Col className={`tier-label ${props.tier}`} xs={1}>
-        {props.tier}
+      <Col className={`tier-label ${props.tierClass}`} xs={1}>
+        {props.tierLabel}
       </Col>
-      <Col className="tier-container" xs={props.width - 1}>
-        <div id={`${props.tier}`} className={`tier ${props.tier}`}>
+      <Col className="tier-container" xs={props.width - 2}>
+        <div id={`${props.tierClass}`} className={`tier ${props.tierClass}`}>
           {props.array[0]
             ? props.array.map((god, i) => {
                 return (

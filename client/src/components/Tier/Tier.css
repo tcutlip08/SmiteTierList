@@ -1,0 +1,22 @@
+.tier-label {
+    font-size: 1.5rem;
+    border-right: double 5px;
+    border-bottom: solid 2px;
+}
+
+.tier-label, .tier {
+    margin: 5px;
+}
+
+.tier {
+    border-right: double 5px;
+    border-bottom: solid 2px;
+    /* border-radius: 10%; */
+}
+
+.ss {
+    background-color: rgb(66, 66, 66);
+    border-color: rgb(255, 0, 0);
+}
+
+.sp {}
