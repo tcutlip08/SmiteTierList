@@ -1,23 +1,23 @@
 import React from "react";
+import "./God.css";
 
 const God = props => {
   return (
     <>
-      <span id={`${props.god}-container`}>
-        <img
-          src={`http://www.smitetierlist.com/gods/${props.god
-            .toLowerCase()
-            .split(" ")
-            .join("")}.jpg`}
-          id={`${props.god}`}
-          className="godimage tooltipstered"
-          data-name={props.god}
-          data-className={props.class}
-          data-tier={props.tier}
-          data-index={props.i}
-          alt={props.god}
-        />
-      </span>
+      {/* <div className={`god-card ${props.class}`}> */}
+      <img
+        src={`http://www.smitetierlist.com/gods/${props.god
+          .toLowerCase()
+          .split(" ")
+          .join("")}.jpg`}
+        className={`god-card ${props.class}`}
+        data-name={props.god}
+        data-className={props.class}
+        data-tier={props.tier}
+        data-index={props.i}
+        alt={props.god}
+      />
+      {/* </div> */}
     </>
   );
 };

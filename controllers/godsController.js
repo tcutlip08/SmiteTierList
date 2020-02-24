@@ -3,6 +3,10 @@ const db = require("../models");
 module.exports = {
   findAll: function(req, res) {
     db.Gods.find(req.query)
+      .populate({
+        path: "rank",
+        model: "User"
+      })
       .then(dbModel => {
         res.json(dbModel);
       })
@@ -19,8 +23,20 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   update: function(req, res) {
-    db.Gods.findOneAndUpdate({ _id: req.params.id }, req.body)
-      .then(dbModel => res.json(dbModel))
+    // console.log(req.body.data.data.god.name);
+    db.Gods.findOne({ name: req.body.data.data.god.name })
+      .then(dbModel => {
+        let rank = dbModel.rank;
+        rank.push(req.body.data.data.god.rank[0]);
+        db.Gods.findOneAndUpdate(
+          { name: req.body.data.data.god.name },
+          { rank: rank }
+        )
+          .then(insertedGod => {
+            res.json({ data: insertedGod });
+          })
+          .catch(err => res.status(422).json(err));
+      })
       .catch(err => res.status(422).json(err));
   },
   remove: function(req, res) {
