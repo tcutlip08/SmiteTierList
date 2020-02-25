@@ -3,6 +3,9 @@ const userController = require("../../controllers/userController");
 
 router.route("/admin/seeds").get(userController.seeds);
 
+router.route("/google/:sub").get(userController.findByGoogle);
+router.route("/google").put(userController.create);
+
 router
   .route("/:id")
   .get(userController.findById)

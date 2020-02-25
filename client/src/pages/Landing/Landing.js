@@ -3,13 +3,15 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
-// import God from "../../components/God/God";
+import NavBar from "../../components/NavBar/NavBar";
+import { GoogleLogin, GoogleLogout } from "react-google-login";
+import env from "../../env.json";
 import Tier from "../../components/Tier/Tier";
 import "./Landing.css";
-require("dotenv").config();
 
 class Landing extends Component {
   state = {
+    user: "",
     tier: {
       ss: [],
       sp: [],
@@ -26,21 +28,17 @@ class Landing extends Component {
   };
 
   componentDidMount() {
-    // console.log(process.env.REACT_APP_OKTA_ORG_URL);
     this.getGods();
-    console.log(process.env.REACT_APP_OKTA_ORG_URL);
   }
 
   componentDidUpdate() {
-    // console.log(this.state.tier);
+    // console.log(this.state.user);
   }
 
   getGods() {
     axios
       .get("/api/gods")
       .then(res => {
-        // console.log(res.data[0]);
-        // console.log(res.data[0].rank[0].gods[0]);
         this.seperateGodByTier(res.data);
       })
       .catch(err => {
@@ -173,9 +171,49 @@ class Landing extends Component {
     });
   };
 
+  responseGoogle = response => {
+    axios
+      .get(
+        "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
+          response.uc.id_token
+      )
+      .then(res => {
+        axios
+          .put(`/api/user/google`, { email: res.data.email, sub: res.data.sub })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        this.setState({ user: res.data });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  logOut = () => {
+    this.setState({ user: "" });
+  };
+
   render() {
     return (
       <Container>
+        <Row>
+          <GoogleLogout
+            clientId={env.clientId}
+            buttonText="Logout"
+            onLogoutSuccess={this.logOut}
+          />
+          <GoogleLogin
+            clientId={env.clientId}
+            buttonText="Login"
+            onSuccess={this.responseGoogle}
+            onFailure={this.responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+        </Row>
         <Row className="tierlist">
           <Col>
             <Row>
