@@ -3,7 +3,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
+import { GoogleLogin, GoogleLogout } from "react-google-login";
+import { useGoogleLogin, useGoogleLogout } from "react-google-login";
+import env from "../../env.json";
 import "./LogIn.css";
+require("dotenv").config();
 
 class LogIn extends Component {
   state = {
@@ -51,6 +55,25 @@ class LogIn extends Component {
           console.log(err);
         });
     }
+  };
+
+  responseGoogle = response => {
+    console.log(response.uc.id_token);
+    axios
+      .get(
+        "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
+          response.uc.id_token
+      )
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  logout = response => {
+    console.log(response);
   };
 
   render() {
@@ -118,6 +141,18 @@ class LogIn extends Component {
             <button className="btn btn-success" onClick={this.signUp}>
               Sign Up
             </button>
+            <GoogleLogin
+              clientId={env.clientId}
+              buttonText="Login"
+              onSuccess={this.responseGoogle}
+              onFailure={this.responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
+            <GoogleLogout
+              clientId={env.clientId}
+              buttonText="Logout"
+              onLogoutSuccess={this.logout}
+            />
           </Col>
         </Row>
       </Container>

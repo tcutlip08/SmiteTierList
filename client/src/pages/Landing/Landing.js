@@ -3,9 +3,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
-import God from "../../components/God/God";
+// import God from "../../components/God/God";
 import Tier from "../../components/Tier/Tier";
 import "./Landing.css";
+require("dotenv").config();
 
 class Landing extends Component {
   state = {
@@ -27,6 +28,7 @@ class Landing extends Component {
   componentDidMount() {
     // console.log(process.env.REACT_APP_OKTA_ORG_URL);
     this.getGods();
+    console.log(process.env.REACT_APP_OKTA_ORG_URL);
   }
 
   componentDidUpdate() {
@@ -276,8 +278,13 @@ class Landing extends Component {
             </Row>
           </Col>
         </Row>
-        <Row className="none">
-          <Tier array={this.state.tier.none} width={12} />
+        <Row>
+          <Tier
+            array={this.state.tier.none}
+            tierLabel="None"
+            tierClass="none"
+            width={12}
+          />
         </Row>
         <div id="blog"></div>
       </Container>
