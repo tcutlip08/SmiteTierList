@@ -20,6 +20,7 @@ const Tier = props => {
                       god={god.god.name}
                       class={god.god.class}
                       tier={props.tier}
+                      key={i}
                       i={i}
                     />
                   );
@@ -44,6 +45,7 @@ const Tier = props => {
                       god={god.god.name}
                       class={god.god.class}
                       tier={props.tier}
+                      key={i}
                       i={i}
                     />
                   );

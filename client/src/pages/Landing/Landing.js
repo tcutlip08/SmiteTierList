@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
-import NavBar from "../../components/NavBar/NavBar";
+// import NavBar from "../../components/NavBar/NavBar";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import env from "../../env.json";
 import Tier from "../../components/Tier/Tier";
@@ -32,7 +32,7 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-    // console.log(this.state.user);
+    console.log(this.state.user);
   }
 
   getGods() {
@@ -42,7 +42,7 @@ class Landing extends Component {
         this.seperateGodByTier(res.data);
       })
       .catch(err => {
-        console.log(err);
+        this.getGods();
       });
   }
 
@@ -63,28 +63,32 @@ class Landing extends Component {
 
     for (let g = 0; g < gods.length; g++) {
       let god = gods[g];
+      let users = 0;
       let average = 0;
       for (let r = 0; r < god.rank.length; r++) {
         let rank = god.rank[r];
-        average = average + rank.gods[g].rank;
+        if (rank.gods[g].rank !== 0) {
+          users++;
+          average = average + rank.gods[g].rank;
+        }
       }
-      if (Math.round(average / god.rank.length) === 1) {
+      if (Math.round(average / users) === 1) {
         tier.d.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 2) {
+      } else if (Math.round(average / users) === 2) {
         tier.c.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 3) {
+      } else if (Math.round(average / users) === 3) {
         tier.b.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 4) {
+      } else if (Math.round(average / users) === 4) {
         tier.bp.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 5) {
+      } else if (Math.round(average / users) === 5) {
         tier.a.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 6) {
+      } else if (Math.round(average / users) === 6) {
         tier.ap.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 7) {
+      } else if (Math.round(average / users) === 7) {
         tier.s.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 8) {
+      } else if (Math.round(average / users) === 8) {
         tier.sp.push({ god: god });
-      } else if (Math.round(average / god.rank.length) === 9) {
+      } else if (Math.round(average / users) === 9) {
         tier.ss.push({ god: god });
       } else {
         tier.none.push({ god: god });
@@ -94,47 +98,53 @@ class Landing extends Component {
   }
 
   submitList = () => {
-    let tier = [];
-    let keys = Object.keys(this.state.tier);
-    let values = Object.values(this.state.tier);
-    for (let i = 0; i < keys.length; i++) {
-      for (let g = 0; g < values[i].length; g++) {
-        if (keys[i] === "none") {
-        } else if (keys[i] === "ss") {
-          tier.push({ data: values[i][g], tier: 9 });
-        } else if (keys[i] === "sp") {
-          tier.push({ data: values[i][g], tier: 8 });
-        } else if (keys[i] === "s") {
-          tier.push({ data: values[i][g], tier: 7 });
-        } else if (keys[i] === "ap") {
-          tier.push({ data: values[i][g], tier: 6 });
-        } else if (keys[i] === "a") {
-          tier.push({ data: values[i][g], tier: 5 });
-        } else if (keys[i] === "bp") {
-          tier.push({ data: values[i][g], tier: 4 });
-        } else if (keys[i] === "b") {
-          tier.push({ data: values[i][g], tier: 3 });
-        } else if (keys[i] === "c") {
-          tier.push({ data: values[i][g], tier: 2 });
-        } else if (keys[i] === "d") {
-          tier.push({ data: values[i][g], tier: 1 });
+    if (this.state.user) {
+      let tier = [];
+      let keys = Object.keys(this.state.tier);
+      let values = Object.values(this.state.tier);
+      for (let i = 0; i < keys.length; i++) {
+        for (let g = 0; g < values[i].length; g++) {
+          if (keys[i] === "none") {
+          } else if (keys[i] === "ss") {
+            tier.push({ data: values[i][g], rank: 9 });
+          } else if (keys[i] === "sp") {
+            tier.push({ data: values[i][g], rank: 8 });
+          } else if (keys[i] === "s") {
+            tier.push({ data: values[i][g], rank: 7 });
+          } else if (keys[i] === "ap") {
+            tier.push({ data: values[i][g], rank: 6 });
+          } else if (keys[i] === "a") {
+            tier.push({ data: values[i][g], rank: 5 });
+          } else if (keys[i] === "bp") {
+            tier.push({ data: values[i][g], rank: 4 });
+          } else if (keys[i] === "b") {
+            tier.push({ data: values[i][g], rank: 3 });
+          } else if (keys[i] === "c") {
+            tier.push({ data: values[i][g], rank: 2 });
+          } else if (keys[i] === "d") {
+            tier.push({ data: values[i][g], rank: 1 });
+          }
         }
       }
+      this.updateGodTier(tier);
+    } else {
+      console.log("Sign in you fuck");
     }
-    this.updateGodTier(tier);
-    // console.log(tier);
   };
 
   updateGodTier(tier) {
     axios
-      .put("/api/gods", { data: tier[0] })
+      .put(`/api/user/${this.state.user._id}`, {
+        _id: tier[0].data.god._id,
+        rank: tier[0].rank
+      })
       .then(res => {
         tier.splice(0, 1);
         if (tier[0]) {
           this.updateGodTier(tier);
         } else {
-          console.log(res);
-          return;
+          console.log("Updated");
+          this.getGods();
         }
       })
       .catch(err => {
@@ -179,14 +189,24 @@ class Landing extends Component {
       )
       .then(res => {
         axios
-          .put(`/api/user/google`, { email: res.data.email, sub: res.data.sub })
+          .get(`/api/user/google/${res.data.sub}`)
           .then(res => {
-            console.log(res);
+            this.setState({ user: res.data });
           })
           .catch(err => {
-            console.log(err);
+            axios
+              .put(`/api/user/google`, {
+                email: res.data.email,
+                sub: res.data.sub
+              })
+              .then(res => {
+                this.push_new_ID_into_god_array(res.data._id, res.data.gods);
+                this.setState({ user: res.data });
+              })
+              .catch(err => {
+                console.log(err);
+              });
           });
-        this.setState({ user: res.data });
       })
       .catch(err => {
         console.log(err);
@@ -197,22 +217,39 @@ class Landing extends Component {
     this.setState({ user: "" });
   };
 
+  push_new_ID_into_god_array = (id, array) => {
+    for (let g = 0; g < array.length; g++) {
+      axios
+        .put("/api/gods", {
+          godID: array[g]._id,
+          _id: id
+        })
+        .then(res => {})
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  };
+
   render() {
     return (
       <Container>
         <Row>
-          <GoogleLogout
-            clientId={env.clientId}
-            buttonText="Logout"
-            onLogoutSuccess={this.logOut}
-          />
-          <GoogleLogin
-            clientId={env.clientId}
-            buttonText="Login"
-            onSuccess={this.responseGoogle}
-            onFailure={this.responseGoogle}
-            cookiePolicy={"single_host_origin"}
-          />
+          {this.state.user ? (
+            <GoogleLogout
+              clientId={env.clientId}
+              buttonText="Logout"
+              onLogoutSuccess={this.logOut}
+            />
+          ) : (
+            <GoogleLogin
+              clientId={env.clientId}
+              buttonText="Login"
+              onSuccess={this.responseGoogle}
+              onFailure={this.responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
+          )}
         </Row>
         <Row className="tierlist">
           <Col>

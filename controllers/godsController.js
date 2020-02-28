@@ -3,10 +3,7 @@ const db = require("../models");
 module.exports = {
   findAll: function(req, res) {
     db.Gods.find(req.query)
-      .populate({
-        path: "rank",
-        model: "User"
-      })
+      .populate("User rank")
       .then(dbModel => {
         res.json(dbModel);
       })
@@ -17,25 +14,24 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
+  newGod: function(req, res) {
+    db.Gods.create({ class: req.params.class, name: req.params.name, rank: [] })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
   create: function(req, res) {
     db.Gods.create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   update: function(req, res) {
-    // console.log(req.body.data.data.god.name);
-    db.Gods.findOne({ name: req.body.data.data.god.name })
+    console.log(req.body);
+    db.Gods.findOneAndUpdate(
+      { _id: req.body.godID },
+      { $addToSet: { rank: req.body._id } }
+    )
       .then(dbModel => {
-        let rank = dbModel.rank;
-        rank.push(req.body.data.data.god.rank[0]);
-        db.Gods.findOneAndUpdate(
-          { name: req.body.data.data.god.name },
-          { rank: rank }
-        )
-          .then(insertedGod => {
-            res.json({ data: insertedGod });
-          })
-          .catch(err => res.status(422).json(err));
+        res.json(dbModel);
       })
       .catch(err => res.status(422).json(err));
   },

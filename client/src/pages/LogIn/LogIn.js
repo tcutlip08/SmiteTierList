@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
-import { useGoogleLogin, useGoogleLogout } from "react-google-login";
+// import { useGoogleLogin, useGoogleLogout } from "react-google-login";
 import env from "../../env.json";
 import "./LogIn.css";
 require("dotenv").config();
