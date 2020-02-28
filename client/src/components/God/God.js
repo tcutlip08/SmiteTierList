@@ -6,10 +6,14 @@ const God = props => {
     <>
       {/* <div className={`god-card ${props.class}`}> */}
       <img
-        src={`http://www.smitetierlist.com/gods/${props.god
-          .toLowerCase()
-          .split(" ")
-          .join("")}.jpg`}
+        src={`http://www.smitetierlist.com/gods/${
+          props.god
+            ? props.god
+                .toLowerCase()
+                .split(" ")
+                .join("")
+            : ""
+        }.jpg`}
         className={`god-card ${props.class}`}
         data-name={props.god}
         data-class={props.class}

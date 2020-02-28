@@ -11,11 +11,13 @@ module.exports = {
   },
   findById: function(req, res) {
     db.User.findById(req.params.id)
+      .populate("Gods gods._id")
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   findByGoogle: function(req, res) {
     db.User.findOne({ sub: req.params.sub })
+      .populate("Gods gods._id")
       .then(dbModel => {
         if (dbModel) {
           res.json(dbModel);

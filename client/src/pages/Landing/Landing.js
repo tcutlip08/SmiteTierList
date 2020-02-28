@@ -2,64 +2,93 @@ import React, { Component } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import axios from "axios";
 // import NavBar from "../../components/NavBar/NavBar";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import env from "../../env.json";
 import Tier from "../../components/Tier/Tier";
 import "./Landing.css";
+import Dropdown from "react-bootstrap/Dropdown";
 
 class Landing extends Component {
   state = {
+    page: "Public",
+    loop: false,
     user: "",
-    tier: {
-      ss: [],
-      sp: [],
-      s: [],
-      ap: [],
-      a: [],
-      bp: [],
-      b: [],
-      c: [],
-      d: [],
-      new: [],
-      none: []
-    }
+    tier: this.emptyTier()
   };
 
   componentDidMount() {
-    this.getGods();
+    this.testPubOrPriv();
   }
 
   componentDidUpdate() {
-    console.log(this.state.user);
+    if (!this.state.loop) {
+      this.testPubOrPriv();
+    }
+    // console.log(this.state.user);
   }
 
-  getGods() {
+  testPubOrPriv() {
+    if (this.state.page === "Public") {
+      this.getPubTierList();
+    } else if (this.state.page === "Private") {
+      if (this.state.user) {
+        this.sepPrivTierList(this.state.user.gods);
+        this.setState({ loop: true });
+      } else {
+        console.log("Sign in ya fuck");
+        this.setState({ page: "Public" });
+        this.testPubOrPriv();
+      }
+    }
+  }
+
+  getPubTierList() {
     axios
       .get("/api/gods")
       .then(res => {
-        this.seperateGodByTier(res.data);
+        this.sepPubTierList(res.data);
       })
       .catch(err => {
-        this.getGods();
+        this.getPubTierList();
       });
   }
 
-  seperateGodByTier(gods) {
-    let tier = {
-      ss: [],
-      sp: [],
-      s: [],
-      ap: [],
-      a: [],
-      bp: [],
-      b: [],
-      c: [],
-      d: [],
-      new: [],
-      none: []
-    };
+  sepPrivTierList(gods) {
+    let tier = this.emptyTier();
+
+    for (let g = 0; g < gods.length; g++) {
+      let god = gods[g]._id;
+
+      if (gods[g].rank === 1) {
+        tier.d.push({ god: god });
+      } else if (gods[g].rank === 2) {
+        tier.c.push({ god: god });
+      } else if (gods[g].rank === 3) {
+        tier.b.push({ god: god });
+      } else if (gods[g].rank === 4) {
+        tier.bp.push({ god: god });
+      } else if (gods[g].rank === 5) {
+        tier.a.push({ god: god });
+      } else if (gods[g].rank === 6) {
+        tier.ap.push({ god: god });
+      } else if (gods[g].rank === 7) {
+        tier.s.push({ god: god });
+      } else if (gods[g].rank === 8) {
+        tier.sp.push({ god: god });
+      } else if (gods[g].rank === 9) {
+        tier.ss.push({ god: god });
+      } else {
+        tier.none.push({ god: god });
+      }
+    }
+    this.setState({ tier: tier });
+  }
+
+  sepPubTierList(gods) {
+    let tier = this.emptyTier();
 
     for (let g = 0; g < gods.length; g++) {
       let god = gods[g];
@@ -143,8 +172,7 @@ class Landing extends Component {
         if (tier[0]) {
           this.updateGodTier(tier);
         } else {
-          console.log("Updated");
-          this.getGods();
+          this.testPubOrPriv();
         }
       })
       .catch(err => {
@@ -165,19 +193,7 @@ class Landing extends Component {
       }
     }
     this.setState({
-      tier: {
-        ss: [],
-        sp: [],
-        s: [],
-        ap: [],
-        a: [],
-        bp: [],
-        b: [],
-        c: [],
-        d: [],
-        new: [],
-        none: tier.none
-      }
+      tier: this.emptyTier()
     });
   };
 
@@ -214,7 +230,7 @@ class Landing extends Component {
   };
 
   logOut = () => {
-    this.setState({ user: "" });
+    this.setState({ user: "", page: "Public" });
   };
 
   push_new_ID_into_god_array = (id, array) => {
@@ -229,6 +245,26 @@ class Landing extends Component {
           console.log(err);
         });
     }
+  };
+
+  emptyTier() {
+    return {
+      ss: [],
+      sp: [],
+      s: [],
+      ap: [],
+      a: [],
+      bp: [],
+      b: [],
+      c: [],
+      d: [],
+      new: [],
+      none: []
+    };
+  }
+
+  handleSelect = evt => {
+    this.setState({ page: evt, loop: false });
   };
 
   render() {
@@ -267,6 +303,16 @@ class Landing extends Component {
                 <button className="btn btn-primary" onClick={this.resetList}>
                   Reset
                 </button>
+              </Col>
+              <Col>
+                <b>Tier List:</b>&nbsp;
+                <DropdownButton
+                  title={this.state.page}
+                  onSelect={this.handleSelect}
+                >
+                  <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
+                  <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
+                </DropdownButton>
               </Col>
             </Row>
             <Row>
