@@ -62,38 +62,38 @@ module.exports = {
       .then(dbModel => dbModel.remove())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
-  },
-  seeds: function(req, res) {
-    db.Gods.find(req.query).then(gods => {
-      let array = [];
-      for (let i = 0; i < gods.length; i++) {
-        array.push({
-          _id: gods[i]._id,
-          rank: Math.floor(Math.random() * 10)
-        });
-      }
-      const user = [
-        {
-          email: "tcutlip08@gmail.com",
-          sub: "102435396460392309866",
-          gods: array
-        }
-      ];
-      db.User.remove({})
-        .then(() => db.User.collection.insertMany(user))
-        .then(user => {
-          for (let g = 0; g < user.ops[0].gods.length; g++) {
-            let god = user.ops[0].gods[g];
-            db.Gods.findOneAndUpdate(
-              { _id: god._id },
-              { rank: [user.ops[0]._id] }
-            )
-              .then(dbModel => {})
-              .catch(err => res.status(422).json(err));
-          }
-          res.json(user);
-        })
-        .catch(err => res.status(422).json(err));
-    });
   }
+  // seeds: function(req, res) {
+  //   db.Gods.find(req.query).then(gods => {
+  //     let array = [];
+  //     for (let i = 0; i < gods.length; i++) {
+  //       array.push({
+  //         _id: gods[i]._id,
+  //         rank: Math.floor(Math.random() * 10)
+  //       });
+  //     }
+  //     const user = [
+  //       {
+  //         email: "email",
+  //         sub: "Google Sub Key",
+  //         gods: array
+  //       }
+  //     ];
+  //     db.User.remove({})
+  //       .then(() => db.User.collection.insertMany(user))
+  //       .then(user => {
+  //         for (let g = 0; g < user.ops[0].gods.length; g++) {
+  //           let god = user.ops[0].gods[g];
+  //           db.Gods.findOneAndUpdate(
+  //             { _id: god._id },
+  //             { rank: [user.ops[0]._id] }
+  //           )
+  //             .then(dbModel => {})
+  //             .catch(err => res.status(422).json(err));
+  //         }
+  //         res.json(user);
+  //       })
+  //       .catch(err => res.status(422).json(err));
+  //   });
+  // }
 };
