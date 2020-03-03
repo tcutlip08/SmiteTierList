@@ -22,6 +22,7 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
+    console.log(this.state.tier);
     if (!this.state.loop) {
       this.testPubOrPriv();
       this.setState({ loop: true });
@@ -49,9 +50,7 @@ class Landing extends Component {
         this.sepPubTierList(res.data);
       })
       .catch(err => {
-        // if (!this.state.loop) {
         this.getPubTierList();
-        // }
       });
   }
 
@@ -133,6 +132,7 @@ class Landing extends Component {
       for (let i = 0; i < keys.length; i++) {
         for (let g = 0; g < values[i].length; g++) {
           if (keys[i] === "none") {
+            tier.push({ data: values[i][g], rank: 0 });
           } else if (keys[i] === "ss") {
             tier.push({ data: values[i][g], rank: 9 });
           } else if (keys[i] === "sp") {
@@ -155,7 +155,6 @@ class Landing extends Component {
         }
       }
       this.updateGodTier(tier);
-      console.log("Updated");
     } else {
       console.log("Sign in you fuck");
     }
@@ -172,6 +171,7 @@ class Landing extends Component {
         if (tier[0]) {
           this.updateGodTier(tier);
         } else {
+          console.log("Updated");
           this.testPubOrPriv();
         }
       })
@@ -193,9 +193,19 @@ class Landing extends Component {
       }
     }
     this.setState({
-      tier: this.emptyTier()
+      tier: {
+        ss: [],
+        sp: [],
+        s: [],
+        ap: [],
+        a: [],
+        bp: [],
+        b: [],
+        c: [],
+        d: [],
+        none: tier.none
+      }
     });
-    this.passTierIntoData(this.emptyTier());
   };
 
   responseGoogle = response => {
@@ -301,22 +311,26 @@ class Landing extends Component {
   render() {
     let tier = this.emptyTier();
 
-    Object.keys(this.state.tier).forEach(t => {
-      this.state.tier[t].forEach(g => {
-        tier[t].push(
-          <img
-            src={`http://www.smitetierlist.com/gods/${g.god.name
-              .toLowerCase()
-              .split(" ")
-              .join("")}.jpg`}
-            className={`item-container ${g.god.class}`}
-            key={g.god.name}
-            draggable
-            onDragStart={e => this.onDragStart(e, g.god.name)}
-            alt={g.god.name}
-          />
-        );
+    Object.keys(this.state.tier).map(t => {
+      this.state.tier[t].map(g => {
+        if (g.god.name) {
+          tier[t].push(
+            <img
+              src={`http://www.smitetierlist.com/gods/${g.god.name
+                .toLowerCase()
+                .split(" ")
+                .join("")}.jpg`}
+              className={`item-container ${g.god.class}`}
+              key={g.god.name}
+              draggable
+              onDragStart={e => this.onDragStart(e, g.god.name)}
+              alt={g.god.name}
+            />
+          );
+        }
+        return "";
       });
+      return "";
     });
 
     return (
@@ -367,7 +381,7 @@ class Landing extends Component {
               </Col>
             </Row>
             {Object.keys(tier).map(t => (
-              <Row>
+              <Row key={t}>
                 <Col className="tier tier-label" xs={1}>
                   {t.includes("p") ? `${t[0].toUpperCase()}+` : t.toUpperCase()}
                 </Col>
