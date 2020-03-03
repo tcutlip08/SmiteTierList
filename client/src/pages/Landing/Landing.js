@@ -227,8 +227,8 @@ class Landing extends Component {
                 sub: res.data.sub
               })
               .then(res => {
-                this.push_new_ID_into_god_array(res.data._id, res.data.gods);
                 this.setState({ user: res.data });
+                this.push_new_ID_into_god_array(res.data._id, res.data.gods);
               })
               .catch(err => {
                 console.log(err);
