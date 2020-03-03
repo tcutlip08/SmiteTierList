@@ -26,7 +26,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   update: function(req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     db.Gods.findOneAndUpdate(
       { _id: req.body.godID },
       { $addToSet: { rank: req.body._id } }

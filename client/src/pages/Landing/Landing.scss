@@ -22,20 +22,17 @@ html {
   padding: 5px;
   width: 100%;
   border-radius: 10px;
-  transition: all 0.5s;
+  transition: all 5s;
 }
 
 .item-container {
   border-radius: 50%;
   margin: 2px;
-  color: #fff;
-  font-weight: 100;
   cursor: move;
   cursor: grab;
-  border-radius: 4px;
-  transition: background 0.4s;
+  border-radius: 50%;
   &:hover {
-    background: rgba(15, 89, 89, 0.9);
+    opacity: 0.5;
   }
 }
 
@@ -46,11 +43,8 @@ img {
 
 .tier-label {
   color: black;
-  padding: 20px 0 0 20px;
-  font-size: 17px;
-  font-weight: 100;
-  letter-spacing: 2px;
-  font-weight: 100;
+  padding: auto;
+  font-size: 1.5rem;
 }
 
 .tier {
@@ -77,4 +71,17 @@ img {
 
 .Hunter {
   border: solid orangered 2px;
+}
+
+.auth {
+  padding: 5px;
+  .email-parent {
+    margin: auto;
+  }
+  .email {
+    border-radius: 4%;
+    font-size: 1rem;
+    padding: 5px;
+    background-color: white;
+  }
 }

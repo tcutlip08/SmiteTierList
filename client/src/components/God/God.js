@@ -4,7 +4,6 @@ import "./God.css";
 const God = props => {
   return (
     <>
-      {/* <div className={`god-card ${props.class}`}> */}
       <img
         src={`http://www.smitetierlist.com/gods/${
           props.god
@@ -23,7 +22,6 @@ const God = props => {
         title={props.god}
         alt={props.god}
       />
-      {/* </div> */}
     </>
   );
 };

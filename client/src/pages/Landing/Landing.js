@@ -11,6 +11,7 @@ import "./Landing.scss";
 
 class Landing extends Component {
   state = {
+    mode: "Duel",
     class: "All",
     page: "Public",
     loop: true,
@@ -88,8 +89,10 @@ class Landing extends Component {
 
   sepPubTierList(gods) {
     let tier = this.emptyTier();
+    // console.log(gods);
 
     for (let g = 0; g < gods.length; g++) {
+      let mode = this.state.mode.toLowerCase();
       let god = gods[g];
       let users = 0;
       let average = 0;
@@ -97,7 +100,7 @@ class Landing extends Component {
         let rank = god.rank[r];
         if (rank.gods[g].rank !== 0) {
           users++;
-          average = average + rank.gods[g].rank;
+          average = average + rank.gods[g].mode[mode];
         }
       }
       if (Math.round(average / users) === 1) {
@@ -165,6 +168,7 @@ class Landing extends Component {
     axios
       .put(`/api/user/${this.state.user._id}`, {
         _id: tier[0].data.god._id,
+        mode: this.state.mode.toLowerCase(),
         rank: tier[0].rank
       })
       .then(res => {
@@ -313,6 +317,10 @@ class Landing extends Component {
     this.setState({ class: evt, loop: false });
   };
 
+  handleModeType = evt => {
+    this.setState({ mode: evt, loop: false });
+  };
+
   render() {
     let tier = this.emptyTier();
 
@@ -330,6 +338,7 @@ class Landing extends Component {
                 .join("")}.jpg`}
               className={`item-container ${g.god.class}`}
               key={g.god.name}
+              title={g.god.god}
               draggable
               onDragStart={e => this.onDragStart(e, g.god.name)}
               alt={g.god.name}
@@ -343,63 +352,80 @@ class Landing extends Component {
 
     return (
       <Container>
-        <Row>
-          {this.state.user ? (
-            <GoogleLogout
-              clientId={env.clientId}
-              buttonText="Logout"
-              onLogoutSuccess={this.logOut}
-            />
-          ) : (
-            <GoogleLogin
-              clientId={env.clientId}
-              buttonText="Login"
-              onSuccess={this.responseGoogle}
-              onFailure={this.responseGoogle}
-              cookiePolicy={"single_host_origin"}
-            />
-          )}
-        </Row>
-        <Row className="tierlist">
+        <Row className="text-center auth">
           <Col>
-            <Row>
-              <Col>
-                <button
-                  className="btn btn-primary"
-                  id="submit"
-                  onClick={this.submitList}
-                >
-                  Submit
-                </button>
-              </Col>
-              <Col>
-                <button className="btn btn-primary" onClick={this.resetList}>
-                  Reset
-                </button>
-              </Col>
-              <Col>
-                <DropdownButton
-                  title={this.state.page}
-                  onSelect={this.handlePubOrPriv}
-                >
-                  <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
-                  <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
-                </DropdownButton>
-              </Col>
-              <Col>
-                <DropdownButton
-                  title={this.state.class}
-                  onSelect={this.handleClassType}
-                >
-                  <Dropdown.Item eventKey="All">All</Dropdown.Item>
-                  <Dropdown.Item eventKey="Mage">Mage</Dropdown.Item>
-                  <Dropdown.Item eventKey="Hunter">Hunter</Dropdown.Item>
-                  <Dropdown.Item eventKey="Assassin">Assassin</Dropdown.Item>
-                  <Dropdown.Item eventKey="Warrior">Warrior</Dropdown.Item>
-                  <Dropdown.Item eventKey="Guardian">Guardian</Dropdown.Item>
-                </DropdownButton>
-              </Col>
-            </Row>
+            {this.state.user ? (
+              <GoogleLogout
+                clientId={env.clientId}
+                buttonText="Logout"
+                onLogoutSuccess={this.logOut}
+              />
+            ) : (
+              <GoogleLogin
+                clientId={env.clientId}
+                buttonText="Login"
+                onSuccess={this.responseGoogle}
+                onFailure={this.responseGoogle}
+                cookiePolicy={"single_host_origin"}
+              />
+            )}
+          </Col>
+          <Col className="email-parent">
+            <span className="email">
+              {this.state.user ? `${this.state.user.email}` : "Sign In"}
+            </span>
+          </Col>
+        </Row>
+        <Row className="text-center">
+          <Col>
+            <button
+              className="btn btn-primary"
+              id="submit"
+              onClick={this.submitList}
+            >
+              Submit
+            </button>
+          </Col>
+          <Col>
+            <button className="btn btn-danger" onClick={this.resetList}>
+              Reset
+            </button>
+          </Col>
+          <Col>
+            <DropdownButton
+              title={this.state.page}
+              onSelect={this.handlePubOrPriv}
+            >
+              <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
+              <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
+            </DropdownButton>
+          </Col>
+          <Col>
+            <DropdownButton
+              title={this.state.class}
+              onSelect={this.handleClassType}
+            >
+              <Dropdown.Item eventKey="All">All</Dropdown.Item>
+              <Dropdown.Item eventKey="Mage">Mage</Dropdown.Item>
+              <Dropdown.Item eventKey="Hunter">Hunter</Dropdown.Item>
+              <Dropdown.Item eventKey="Assassin">Assassin</Dropdown.Item>
+              <Dropdown.Item eventKey="Warrior">Warrior</Dropdown.Item>
+              <Dropdown.Item eventKey="Guardian">Guardian</Dropdown.Item>
+            </DropdownButton>
+          </Col>
+          <Col>
+            <DropdownButton
+              title={this.state.mode}
+              onSelect={this.handleModeType}
+            >
+              <Dropdown.Item eventKey="Conquest">Conquest</Dropdown.Item>
+              <Dropdown.Item eventKey="Joust">Joust</Dropdown.Item>
+              <Dropdown.Item eventKey="Duel">Duel</Dropdown.Item>
+            </DropdownButton>
+          </Col>
+        </Row>
+        <Row className="tier-list">
+          <Col>
             {Object.keys(tier).map(t => (
               <Row key={t}>
                 <Col className="tier tier-label" xs={1}>
@@ -416,7 +442,6 @@ class Landing extends Component {
             ))}
           </Col>
         </Row>
-        <div id="blog"></div>
       </Container>
     );
   }

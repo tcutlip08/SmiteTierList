@@ -34,7 +34,7 @@ module.exports = {
         for (let i = 0; i < gods.length; i++) {
           array.push({
             _id: gods[i]._id,
-            rank: 0
+            mode: { conquest: 0, joust: 0, duel: 0 }
           });
         }
         db.User.create({
@@ -48,14 +48,41 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   update: function(req, res) {
-    db.User.updateOne(
-      { _id: req.params.id, "gods._id": req.body._id },
-      { $set: { "gods.$.rank": req.body.rank } }
-    )
-      .then(data => {
-        res.json(data);
-      })
-      .catch(err => res.status(422).json(err));
+    if (req.body.mode === "duel") {
+      db.User.updateOne(
+        { _id: req.params.id, "gods._id": req.body._id },
+        { $set: { "gods.$.mode.duel": req.body.rank } }
+      )
+        .then(data => {
+          res.json(data);
+        })
+        .catch(err => res.status(422).json(err));
+    } else if (req.body.mode === "conquest") {
+      db.User.updateOne(
+        { _id: req.params.id, "gods._id": req.body._id },
+        { $set: { "gods.$.mode.conquest": req.body.rank } }
+      )
+        .then(data => {
+          res.json(data);
+        })
+        .catch(err => res.status(422).json(err));
+    } else if (req.body.mode === "joust") {
+      db.User.updateOne(
+        { _id: req.params.id, "gods._id": req.body._id },
+        { $set: { "gods.$.mode.joust": req.body.rank } }
+      )
+        .then(data => {
+          res.json(data);
+        })
+        .catch(err => res.status(422).json(err));
+    } else {
+      res
+        .status(422)
+        .json({
+          message:
+            "Mode not detected. Probably cause who ever coded this is a fuckin idiot (^-^)"
+        });
+    }
   },
   remove: function(req, res) {
     db.User.findById({ _id: req.params.id })
