@@ -181,7 +181,10 @@ class Landing extends Component {
       this.setState({ showModal: true, message: "This may take a minute..." });
       this.updateGodTier(tier);
     } else {
-      console.log("Sign in you fuck");
+      this.setState({
+        showModal: true,
+        message: "You must sign in to access this content"
+      });
     }
   };
 
