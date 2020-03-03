@@ -61,24 +61,25 @@ class Landing extends Component {
 
     for (let g = 0; g < gods.length; g++) {
       let god = gods[g]._id;
+      let rank = gods[g].mode[this.state.mode.toLowerCase()];
 
-      if (gods[g].rank === 1) {
+      if (rank === 1) {
         tier.d.push({ god: god });
-      } else if (gods[g].rank === 2) {
+      } else if (rank === 2) {
         tier.c.push({ god: god });
-      } else if (gods[g].rank === 3) {
+      } else if (rank === 3) {
         tier.b.push({ god: god });
-      } else if (gods[g].rank === 4) {
+      } else if (rank === 4) {
         tier.bp.push({ god: god });
-      } else if (gods[g].rank === 5) {
+      } else if (rank === 5) {
         tier.a.push({ god: god });
-      } else if (gods[g].rank === 6) {
+      } else if (rank === 6) {
         tier.ap.push({ god: god });
-      } else if (gods[g].rank === 7) {
+      } else if (rank === 7) {
         tier.s.push({ god: god });
-      } else if (gods[g].rank === 8) {
+      } else if (rank === 8) {
         tier.sp.push({ god: god });
-      } else if (gods[g].rank === 9) {
+      } else if (rank === 9) {
         tier.ss.push({ god: god });
       } else {
         tier.none.push({ god: god });
