@@ -3,31 +3,29 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import axios from "axios";
-// import NavBar from "../../components/NavBar/NavBar";
-import { GoogleLogin, GoogleLogout } from "react-google-login";
-import env from "../../env.json";
-import Tier from "../../components/Tier/Tier";
-import "./Landing.css";
 import Dropdown from "react-bootstrap/Dropdown";
+import { GoogleLogin, GoogleLogout } from "react-google-login";
+import axios from "axios";
+import env from "../../env.json";
+import "./Landing.scss";
 
 class Landing extends Component {
   state = {
     page: "Public",
-    loop: false,
+    loop: true,
     user: "",
     tier: this.emptyTier()
   };
 
   componentDidMount() {
-    this.testPubOrPriv();
+    this.getPubTierList();
   }
 
   componentDidUpdate() {
     if (!this.state.loop) {
       this.testPubOrPriv();
+      this.setState({ loop: true });
     }
-    // console.log(this.state.user);
   }
 
   testPubOrPriv() {
@@ -40,7 +38,6 @@ class Landing extends Component {
       } else {
         console.log("Sign in ya fuck");
         this.setState({ page: "Public" });
-        this.testPubOrPriv();
       }
     }
   }
@@ -52,7 +49,9 @@ class Landing extends Component {
         this.sepPubTierList(res.data);
       })
       .catch(err => {
+        // if (!this.state.loop) {
         this.getPubTierList();
+        // }
       });
   }
 
@@ -156,6 +155,7 @@ class Landing extends Component {
         }
       }
       this.updateGodTier(tier);
+      console.log("Updated");
     } else {
       console.log("Sign in you fuck");
     }
@@ -195,6 +195,7 @@ class Landing extends Component {
     this.setState({
       tier: this.emptyTier()
     });
+    this.passTierIntoData(this.emptyTier());
   };
 
   responseGoogle = response => {
@@ -258,16 +259,66 @@ class Landing extends Component {
       b: [],
       c: [],
       d: [],
-      new: [],
       none: []
     };
   }
+
+  onDragOver = ev => {
+    ev.preventDefault();
+  };
+
+  onDragStart = (ev, name) => {
+    ev.dataTransfer.setData("name", name);
+  };
+
+  onDrop = (ev, newTier) => {
+    const name = ev.dataTransfer.getData("name");
+    // console.log("New Tier: " + newTier);
+    // console.log("Name: " + name);
+
+    let tier = this.emptyTier();
+
+    Object.keys(this.state.tier).forEach(t => {
+      this.state.tier[t].map(god => {
+        if (god.god.name === name) {
+          tier[newTier].push(god);
+        } else {
+          tier[t].push(god);
+        }
+        return "";
+      });
+    });
+
+    this.setState({
+      tier: tier
+    });
+  };
 
   handleSelect = evt => {
     this.setState({ page: evt, loop: false });
   };
 
   render() {
+    let tier = this.emptyTier();
+
+    Object.keys(this.state.tier).forEach(t => {
+      this.state.tier[t].forEach(g => {
+        tier[t].push(
+          <img
+            src={`http://www.smitetierlist.com/gods/${g.god.name
+              .toLowerCase()
+              .split(" ")
+              .join("")}.jpg`}
+            className={`item-container ${g.god.class}`}
+            key={g.god.name}
+            draggable
+            onDragStart={e => this.onDragStart(e, g.god.name)}
+            alt={g.god.name}
+          />
+        );
+      });
+    });
+
     return (
       <Container>
         <Row>
@@ -315,97 +366,21 @@ class Landing extends Component {
                 </DropdownButton>
               </Col>
             </Row>
-            <Row>
-              <Col>
-                <Row>
-                  <Tier
-                    tierLabel="SS"
-                    tierClass="ss"
-                    array={this.state.tier.ss}
-                    width={8}
-                  />
-                  <Tier
-                    tierLabel="New"
-                    tierClass="new"
-                    array={this.state.tier.new}
-                    width={4}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="S+"
-                    tierClass="sp"
-                    array={this.state.tier.sp}
-                    width={12}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="S"
-                    tierClass="s"
-                    array={this.state.tier.s}
-                    width={12}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="A+"
-                    tierClass="ap"
-                    array={this.state.tier.ap}
-                    width={12}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="A"
-                    tierClass="a"
-                    array={this.state.tier.a}
-                    width={12}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="B+"
-                    tierClass="bp"
-                    array={this.state.tier.bp}
-                    width={12}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="B"
-                    tierClass="b"
-                    array={this.state.tier.b}
-                    width={12}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="C"
-                    tierClass="c"
-                    array={this.state.tier.c}
-                    width={12}
-                  />
-                </Row>
-                <Row>
-                  <Tier
-                    tierLabel="D"
-                    tierClass="d"
-                    array={this.state.tier.d}
-                    width={12}
-                  />
-                </Row>
-              </Col>
-            </Row>
+            {Object.keys(tier).map(t => (
+              <Row>
+                <Col className="tier-label" xs={1}>
+                  {t.includes("p") ? `${t[0].toUpperCase()}+` : t.toUpperCase()}
+                </Col>
+                <Col
+                  className="drop-area"
+                  onDragOver={e => this.onDragOver(e)}
+                  onDrop={e => this.onDrop(e, t)}
+                >
+                  {tier[t]}
+                </Col>
+              </Row>
+            ))}
           </Col>
-        </Row>
-        <Row>
-          <Tier
-            array={this.state.tier.none}
-            tierLabel="None"
-            tierClass="none"
-            width={12}
-          />
         </Row>
         <div id="blog"></div>
       </Container>

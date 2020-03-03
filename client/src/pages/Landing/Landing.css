@@ -2,6 +2,26 @@
     color: black
 }
 
+.Warrior {
+    border: solid red 2px;
+}
+
+.Assassin {
+    border: solid yellow 2px;
+}
+
+.Guardian {
+    border: solid green 2px;
+}
+
+.Mage {
+    border: solid purple 2px;
+}
+
+.Hunter {
+    border: solid orangered 2px;
+}
+
 .tierlist {
     background-color: grey;
     border: double black 2px;

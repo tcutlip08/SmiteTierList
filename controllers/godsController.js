@@ -5,6 +5,7 @@ module.exports = {
     db.Gods.find(req.query)
       .populate("User rank")
       .then(dbModel => {
+        console.log("Fuck");
         res.json(dbModel);
       })
       .catch(err => res.status(422).json(err));

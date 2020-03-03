@@ -1,0 +1,91 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  font-family: "Quicksand", sans-serif;
+  //   width: 100%;
+  //   height: 100%;
+}
+
+.container {
+  justify-content: center;
+}
+
+.drop-area {
+  background: rgba(0, 0, 0, 0.8);
+  min-height: 200px;
+  margin: 5px;
+  padding-bottom: 20px;
+  width: 100%;
+  border-radius: 10px;
+  transition: all 0.5s;
+}
+
+.item-container {
+  border-radius: 50%;
+  margin: 2px;
+  color: #fff;
+  font-weight: 100;
+  cursor: move;
+  cursor: grab;
+  border-radius: 4px;
+  transition: background 0.4s;
+  &:hover {
+    background: rgba(15, 89, 89, 0.9);
+  }
+}
+
+.tier-label {
+  color: black;
+  padding: 20px 0 0 20px;
+  font-size: 17px;
+  font-weight: 100;
+  letter-spacing: 2px;
+  font-weight: 100;
+}
+
+input {
+  border: 2px solid #fb6964;
+  display: block;
+  margin: 50px auto;
+  width: 500px;
+  height: 50px;
+  border-radius: 5px;
+  font-size: 16px;
+  padding-left: 25px;
+  background: rgba(255, 255, 255, 0.8);
+  outline: none;
+  color: #000;
+  transition: all 0.5s ease;
+  &:focus,
+  &:hover {
+    background: rgba(255, 255, 255, 1);
+    border: 3px solid #fb6964;
+    width: 520px;
+    height: 55px;
+  }
+}
+
+.Warrior {
+  border: solid red 2px;
+}
+
+.Assassin {
+  border: solid yellow 2px;
+}
+
+.Guardian {
+  border: solid green 2px;
+}
+
+.Mage {
+  border: solid purple 2px;
+}
+
+.Hunter {
+  border: solid orangered 2px;
+}
