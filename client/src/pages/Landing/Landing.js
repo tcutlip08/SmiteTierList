@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Modal from "react-modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,8 +10,23 @@ import axios from "axios";
 import env from "../../env.json";
 import "./Landing.scss";
 
+Modal.setAppElement("#root");
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)"
+  }
+};
+
 class Landing extends Component {
   state = {
+    message: "",
+    showModal: false,
     mode: "Duel",
     class: "All",
     page: "Public",
@@ -24,7 +40,7 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state.tier);
+    // console.log(this.state.tier);
     if (!this.state.loop) {
       this.testPubOrPriv();
       this.setState({ loop: true });
@@ -39,8 +55,11 @@ class Landing extends Component {
         this.sepPrivTierList(this.state.user.gods);
         this.setState({ loop: true });
       } else {
-        console.log("Sign in ya fuck");
-        this.setState({ page: "Public" });
+        this.setState({
+          page: "Public",
+          showModal: true,
+          message: "You must sign in to access this content"
+        });
       }
     }
   }
@@ -159,6 +178,7 @@ class Landing extends Component {
           }
         }
       }
+      this.setState({ showModal: true, message: "This may take a minute..." });
       this.updateGodTier(tier);
     } else {
       console.log("Sign in you fuck");
@@ -177,7 +197,7 @@ class Landing extends Component {
         if (tier[0]) {
           this.updateGodTier(tier);
         } else {
-          console.log("Updated");
+          this.setState({ showModal: false, message: "All finnished" });
           this.testPubOrPriv();
         }
       })
@@ -310,6 +330,10 @@ class Landing extends Component {
     });
   };
 
+  handleCloseModal = () => {
+    this.setState({ showModal: false, message: "" });
+  };
+
   handlePubOrPriv = evt => {
     this.setState({ page: evt, loop: false });
   };
@@ -352,98 +376,115 @@ class Landing extends Component {
     });
 
     return (
-      <Container>
-        <Row className="text-center auth">
-          <Col>
-            {this.state.user ? (
-              <GoogleLogout
-                clientId={env.clientId}
-                buttonText="Logout"
-                onLogoutSuccess={this.logOut}
-              />
-            ) : (
-              <GoogleLogin
-                clientId={env.clientId}
-                buttonText="Login"
-                onSuccess={this.responseGoogle}
-                onFailure={this.responseGoogle}
-                cookiePolicy={"single_host_origin"}
-              />
-            )}
-          </Col>
-          <Col className="email-parent">
-            <span className="email">
-              {this.state.user ? `${this.state.user.email}` : "Sign In"}
-            </span>
-          </Col>
-        </Row>
-        <Row className="text-center">
-          <Col>
-            <button
-              className="btn btn-primary"
-              id="submit"
-              onClick={this.submitList}
-            >
-              Submit
+      <>
+        <Container>
+          <Row className="text-center auth">
+            <Col>
+              {this.state.user ? (
+                <GoogleLogout
+                  clientId={env.clientId}
+                  buttonText="Logout"
+                  onLogoutSuccess={this.logOut}
+                />
+              ) : (
+                <GoogleLogin
+                  clientId={env.clientId}
+                  buttonText="Login"
+                  onSuccess={this.responseGoogle}
+                  onFailure={this.responseGoogle}
+                  cookiePolicy={"single_host_origin"}
+                />
+              )}
+            </Col>
+            <Col className="email-parent">
+              <span className="email">
+                {this.state.user ? `${this.state.user.email}` : "Sign In"}
+              </span>
+            </Col>
+          </Row>
+          <Row className="text-center">
+            <Col>
+              <button
+                className="btn btn-primary"
+                id="submit"
+                onClick={this.submitList}
+              >
+                Submit
+              </button>
+            </Col>
+            <Col>
+              <button className="btn btn-danger" onClick={this.resetList}>
+                Reset
+              </button>
+            </Col>
+            <Col>
+              <DropdownButton
+                title={this.state.page}
+                onSelect={this.handlePubOrPriv}
+              >
+                <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
+                <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
+              </DropdownButton>
+            </Col>
+            <Col>
+              <DropdownButton
+                title={this.state.class}
+                onSelect={this.handleClassType}
+              >
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                <Dropdown.Item eventKey="Mage">Mage</Dropdown.Item>
+                <Dropdown.Item eventKey="Hunter">Hunter</Dropdown.Item>
+                <Dropdown.Item eventKey="Assassin">Assassin</Dropdown.Item>
+                <Dropdown.Item eventKey="Warrior">Warrior</Dropdown.Item>
+                <Dropdown.Item eventKey="Guardian">Guardian</Dropdown.Item>
+              </DropdownButton>
+            </Col>
+            <Col>
+              <DropdownButton
+                title={this.state.mode}
+                onSelect={this.handleModeType}
+              >
+                <Dropdown.Item eventKey="Conquest">Conquest</Dropdown.Item>
+                <Dropdown.Item eventKey="Joust">Joust</Dropdown.Item>
+                <Dropdown.Item eventKey="Duel">Duel</Dropdown.Item>
+              </DropdownButton>
+            </Col>
+          </Row>
+          <Row className="tier-list">
+            <Col>
+              {Object.keys(tier).map(t => (
+                <Row key={t}>
+                  <Col className="tier tier-label" xs={1}>
+                    {t.includes("p")
+                      ? `${t[0].toUpperCase()}+`
+                      : t.toUpperCase()}
+                  </Col>
+                  <Col
+                    className="tier drop-area"
+                    onDragOver={e => this.onDragOver(e)}
+                    onDrop={e => this.onDrop(e, t)}
+                  >
+                    {tier[t]}
+                  </Col>
+                </Row>
+              ))}
+            </Col>
+          </Row>
+        </Container>
+        <Container>
+          <Modal
+            isOpen={this.state.showModal}
+            onRequestClose={this.handleCloseModal}
+            contentLabel="Error"
+            style={customStyles}
+          >
+            <h3>{this.state.message}</h3>
+            <button className="btn btn-primary" onClick={this.handleCloseModal}>
+              Ok
             </button>
-          </Col>
-          <Col>
-            <button className="btn btn-danger" onClick={this.resetList}>
-              Reset
-            </button>
-          </Col>
-          <Col>
-            <DropdownButton
-              title={this.state.page}
-              onSelect={this.handlePubOrPriv}
-            >
-              <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
-              <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
-            </DropdownButton>
-          </Col>
-          <Col>
-            <DropdownButton
-              title={this.state.class}
-              onSelect={this.handleClassType}
-            >
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              <Dropdown.Item eventKey="Mage">Mage</Dropdown.Item>
-              <Dropdown.Item eventKey="Hunter">Hunter</Dropdown.Item>
-              <Dropdown.Item eventKey="Assassin">Assassin</Dropdown.Item>
-              <Dropdown.Item eventKey="Warrior">Warrior</Dropdown.Item>
-              <Dropdown.Item eventKey="Guardian">Guardian</Dropdown.Item>
-            </DropdownButton>
-          </Col>
-          <Col>
-            <DropdownButton
-              title={this.state.mode}
-              onSelect={this.handleModeType}
-            >
-              <Dropdown.Item eventKey="Conquest">Conquest</Dropdown.Item>
-              <Dropdown.Item eventKey="Joust">Joust</Dropdown.Item>
-              <Dropdown.Item eventKey="Duel">Duel</Dropdown.Item>
-            </DropdownButton>
-          </Col>
-        </Row>
-        <Row className="tier-list">
-          <Col>
-            {Object.keys(tier).map(t => (
-              <Row key={t}>
-                <Col className="tier tier-label" xs={1}>
-                  {t.includes("p") ? `${t[0].toUpperCase()}+` : t.toUpperCase()}
-                </Col>
-                <Col
-                  className="tier drop-area"
-                  onDragOver={e => this.onDragOver(e)}
-                  onDrop={e => this.onDrop(e, t)}
-                >
-                  {tier[t]}
-                </Col>
-              </Row>
-            ))}
-          </Col>
-        </Row>
-      </Container>
+          </Modal>
+        </Container>
+      </>
     );
   }
 }
