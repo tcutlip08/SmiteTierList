@@ -11,15 +11,15 @@ html {
   //   height: 100%;
 }
 
-.container {
-  justify-content: center;
-}
+// .container {
+//   justify-content: center;
+// }
 
 .drop-area {
   background: rgba(0, 0, 0, 0.8);
-  min-height: 200px;
+  min-height: 50px;
   margin: 5px;
-  padding-bottom: 20px;
+  padding: 5px;
   width: 100%;
   border-radius: 10px;
   transition: all 0.5s;
@@ -39,6 +39,11 @@ html {
   }
 }
 
+.item-container,
+img {
+  border-radius: 50%;
+}
+
 .tier-label {
   color: black;
   padding: 20px 0 0 20px;
@@ -48,26 +53,10 @@ html {
   font-weight: 100;
 }
 
-input {
-  border: 2px solid #fb6964;
-  display: block;
-  margin: 50px auto;
-  width: 500px;
-  height: 50px;
-  border-radius: 5px;
-  font-size: 16px;
-  padding-left: 25px;
-  background: rgba(255, 255, 255, 0.8);
-  outline: none;
-  color: #000;
-  transition: all 0.5s ease;
-  &:focus,
-  &:hover {
-    background: rgba(255, 255, 255, 1);
-    border: 3px solid #fb6964;
-    width: 520px;
-    height: 55px;
-  }
+.tier {
+  border-right: double 5px;
+  border-bottom: solid 2px;
+  margin: 5px;
 }
 
 .Warrior {

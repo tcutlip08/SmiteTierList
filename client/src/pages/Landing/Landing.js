@@ -368,11 +368,11 @@ class Landing extends Component {
             </Row>
             {Object.keys(tier).map(t => (
               <Row>
-                <Col className="tier-label" xs={1}>
+                <Col className="tier tier-label" xs={1}>
                   {t.includes("p") ? `${t[0].toUpperCase()}+` : t.toUpperCase()}
                 </Col>
                 <Col
-                  className="drop-area"
+                  className="tier drop-area"
                   onDragOver={e => this.onDragOver(e)}
                   onDrop={e => this.onDrop(e, t)}
                 >
