@@ -11,6 +11,7 @@ import "./Landing.scss";
 
 class Landing extends Component {
   state = {
+    class: "All",
     page: "Public",
     loop: true,
     user: "",
@@ -304,8 +305,12 @@ class Landing extends Component {
     });
   };
 
-  handleSelect = evt => {
+  handlePubOrPriv = evt => {
     this.setState({ page: evt, loop: false });
+  };
+
+  handleClassType = evt => {
+    this.setState({ class: evt, loop: false });
   };
 
   render() {
@@ -313,7 +318,10 @@ class Landing extends Component {
 
     Object.keys(this.state.tier).map(t => {
       this.state.tier[t].map(g => {
-        if (g.god.name) {
+        if (
+          g.god.name &&
+          (this.state.class === g.god.class || this.state.class === "All")
+        ) {
           tier[t].push(
             <img
               src={`http://www.smitetierlist.com/gods/${g.god.name
@@ -370,13 +378,25 @@ class Landing extends Component {
                 </button>
               </Col>
               <Col>
-                <b>Tier List:</b>&nbsp;
                 <DropdownButton
                   title={this.state.page}
-                  onSelect={this.handleSelect}
+                  onSelect={this.handlePubOrPriv}
                 >
                   <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
                   <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
+                </DropdownButton>
+              </Col>
+              <Col>
+                <DropdownButton
+                  title={this.state.class}
+                  onSelect={this.handleClassType}
+                >
+                  <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                  <Dropdown.Item eventKey="Mage">Mage</Dropdown.Item>
+                  <Dropdown.Item eventKey="Hunter">Hunter</Dropdown.Item>
+                  <Dropdown.Item eventKey="Assassin">Assassin</Dropdown.Item>
+                  <Dropdown.Item eventKey="Warrior">Warrior</Dropdown.Item>
+                  <Dropdown.Item eventKey="Guardian">Guardian</Dropdown.Item>
                 </DropdownButton>
               </Col>
             </Row>
