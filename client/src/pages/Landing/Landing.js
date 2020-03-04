@@ -221,20 +221,9 @@ class Landing extends Component {
         }
       }
     }
-    this.setState({
-      tier: {
-        ss: [],
-        sp: [],
-        s: [],
-        ap: [],
-        a: [],
-        bp: [],
-        b: [],
-        c: [],
-        d: [],
-        none: tier.none
-      }
-    });
+    let newTier = this.emptyTier();
+    newTier.none = tier.none;
+    this.setState({ tier: newTier });
   };
 
   responseGoogle = response => {

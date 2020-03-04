@@ -1,6 +1,7 @@
 # dependencies
 /node_modules
 /.pnp
+/Rexsi
 .pnp.js
 # testing
 /coverage
