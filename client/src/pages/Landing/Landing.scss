@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  font-family: "Quicksand", sans-serif;
+  //   width: 100%;
+  //   height: 100%;
+}
+
+// .container {
+//   justify-content: center;
+// }
+
+.drop-area {
+  background: rgba(0, 0, 0, 0.8);
+  min-height: 50px;
+  margin: 5px;
+  padding: 5px;
+  width: 100%;
+  border-radius: 10px;
+  transition: all 5s;
+}
+
+.item-container {
+  border-radius: 50%;
+  margin: 2px;
+  cursor: move;
+  cursor: grab;
+  border-radius: 50%;
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.item-container,
+img {
+  border-radius: 50%;
+}
+
+.tier-label {
+  color: black;
+  padding: auto;
+  font-size: 1.5rem;
+}
+
+.tier {
+  border-right: double 5px;
+  border-bottom: solid 2px;
+  margin: 5px;
+}
+
+.Warrior {
+  border: solid red 2px;
+}
+
+.Assassin {
+  border: solid yellow 2px;
+}
+
+.Guardian {
+  border: solid green 2px;
+}
+
+.Mage {
+  border: solid purple 2px;
+}
+
+.Hunter {
+  border: solid orangered 2px;
+}
+
+.auth {
+  padding: 5px;
+  .email-parent {
+    margin: auto;
+  }
+  .email {
+    border-radius: 4%;
+    font-size: 1rem;
+    padding: 5px;
+    background-color: white;
+  }
+}

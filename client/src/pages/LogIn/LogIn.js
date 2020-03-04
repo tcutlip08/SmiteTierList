@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
-import { useGoogleLogin, useGoogleLogout } from "react-google-login";
+// import { useGoogleLogin, useGoogleLogout } from "react-google-login";
 import env from "../../env.json";
 import "./LogIn.css";
 require("dotenv").config();
@@ -58,7 +58,6 @@ class LogIn extends Component {
   };
 
   responseGoogle = response => {
-    console.log(response.uc.id_token);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +

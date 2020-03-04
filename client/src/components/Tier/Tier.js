@@ -1,6 +1,7 @@
 import React from "react";
 // import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+// import Board from "react-trello";
 import God from "../God/God";
 import "./Tier.css";
 
@@ -12,6 +13,7 @@ const Tier = props => {
           {props.tierLabel}
         </Col>
         <Col className="tier-container">
+          {/* <Board data={props} /> */}
           <div id={`${props.tierClass}`} className={`tier ${props.tierClass}`}>
             {props.array[0]
               ? props.array.map((god, i) => {
@@ -20,6 +22,7 @@ const Tier = props => {
                       god={god.god.name}
                       class={god.god.class}
                       tier={props.tier}
+                      key={i}
                       i={i}
                     />
                   );
@@ -44,6 +47,7 @@ const Tier = props => {
                       god={god.god.name}
                       class={god.god.class}
                       tier={props.tier}
+                      key={i}
                       i={i}
                     />
                   );
