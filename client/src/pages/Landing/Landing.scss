@@ -7,14 +7,16 @@
 body,
 html {
   font-family: "Quicksand", sans-serif;
-  background-image: url("../../assets/img/Rexsi/Rexsi_Banner.jpg");
-  z-index: 100;
   //   width: 100%;
   //   height: 100%;
 }
 
+.btn {
+  width:100%;
+}
+
 .drop-area {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.4);
   min-height: 50px;
   margin: 5px;
   padding: 5px;
