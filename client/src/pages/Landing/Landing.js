@@ -41,7 +41,6 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-    // console.log(this.state.tier);
     if (!this.state.loop) {
       this.testPubOrPriv();
       this.setState({ loop: true });
@@ -81,37 +80,16 @@ class Landing extends Component {
 
     for (let g = 0; g < gods.length; g++) {
       let god = gods[g]._id;
-      let rank = gods[g].mode[this.state.mode.toLowerCase()];
-      console.log(rank);
+      let modeRank = gods[g].mode[this.state.mode.toLowerCase()];
 
-      if (rank === 1) {
-        tier.d.push({ god: god });
-      } else if (rank === 2) {
-        tier.c.push({ god: god });
-      } else if (rank === 3) {
-        tier.b.push({ god: god });
-      } else if (rank === 4) {
-        tier.bp.push({ god: god });
-      } else if (rank === 5) {
-        tier.a.push({ god: god });
-      } else if (rank === 6) {
-        tier.ap.push({ god: god });
-      } else if (rank === 7) {
-        tier.s.push({ god: god });
-      } else if (rank === 8) {
-        tier.sp.push({ god: god });
-      } else if (rank === 9) {
-        tier.ss.push({ god: god });
-      } else {
-        tier.none.push({ god: god });
-      }
+      let rank = this.testValRank(modeRank);
+      tier[rank].push({ god: god });
     }
     this.setState({ tier: tier });
   }
 
   sepPubTierList(gods) {
     let tier = this.emptyTier();
-    // console.log(gods);
 
     for (let g = 0; g < gods.length; g++) {
       let mode = this.state.mode.toLowerCase();
@@ -125,29 +103,34 @@ class Landing extends Component {
           average = average + rank.gods[g].mode[mode];
         }
       }
-      if (Math.round(average / users) === 1) {
-        tier.d.push({ god: god });
-      } else if (Math.round(average / users) === 2) {
-        tier.c.push({ god: god });
-      } else if (Math.round(average / users) === 3) {
-        tier.b.push({ god: god });
-      } else if (Math.round(average / users) === 4) {
-        tier.bp.push({ god: god });
-      } else if (Math.round(average / users) === 5) {
-        tier.a.push({ god: god });
-      } else if (Math.round(average / users) === 6) {
-        tier.ap.push({ god: god });
-      } else if (Math.round(average / users) === 7) {
-        tier.s.push({ god: god });
-      } else if (Math.round(average / users) === 8) {
-        tier.sp.push({ god: god });
-      } else if (Math.round(average / users) === 9) {
-        tier.ss.push({ god: god });
-      } else {
-        tier.none.push({ god: god });
-      }
+      let rank = this.testValRank(Math.round(average / users));
+      tier[rank].push({ god: god });
     }
     this.setState({ tier: tier });
+  }
+
+  testValRank(val) {
+    if (val === 1) {
+      return "d";
+    } else if (val === 2) {
+      return "c";
+    } else if (val === 3) {
+      return "b";
+    } else if (val === 4) {
+      return "bp";
+    } else if (val === 5) {
+      return "a";
+    } else if (val === 6) {
+      return "ap";
+    } else if (val === 7) {
+      return "s";
+    } else if (val === 8) {
+      return "sp";
+    } else if (val === 9) {
+      return "ss";
+    } else {
+      return "none";
+    }
   }
 
   submitList = () => {
@@ -204,13 +187,14 @@ class Landing extends Component {
         } else {
           this.setState({
             showModal: false,
-            message: "All finnished"
+            message: "All finnished",
+            loop: false
           });
           this.refreshUserData();
         }
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       });
   }
 
@@ -221,7 +205,7 @@ class Landing extends Component {
         this.setState({ user: res.data, loop: false });
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       });
   }
 
@@ -276,12 +260,12 @@ class Landing extends Component {
                 this.push_new_ID_into_god_array(res.data._id, res.data.gods);
               })
               .catch(err => {
-                console.log(err);
+                // console.log(err);
               });
           });
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -298,7 +282,7 @@ class Landing extends Component {
         })
         .then(res => {})
         .catch(err => {
-          console.log(err);
+          // console.log(err);
         });
     }
   };
@@ -328,8 +312,6 @@ class Landing extends Component {
 
   onDrop = (ev, newTier) => {
     const name = ev.dataTransfer.getData("name");
-    // console.log("New Tier: " + newTier);
-    // console.log("Name: " + name);
 
     let tier = this.emptyTier();
 
