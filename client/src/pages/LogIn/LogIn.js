@@ -36,9 +36,7 @@ class LogIn extends Component {
 
     axios
       .post("/api/user/log-in", this.state)
-      .then(res => {
-        console.log(res);
-      })
+      .then(res => {})
       .catch(err => {
         console.log(err);
       });
@@ -48,9 +46,7 @@ class LogIn extends Component {
     if (this.state.username && this.state.email && this.state.password) {
       axios
         .post("/api/user", this.state)
-        .then(res => {
-          console.log(res);
-        })
+        .then(res => {})
         .catch(err => {
           console.log(err);
         });
@@ -63,17 +59,13 @@ class LogIn extends Component {
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
           response.uc.id_token
       )
-      .then(res => {
-        console.log(res);
-      })
+      .then(res => {})
       .catch(err => {
         console.log(err);
       });
   };
 
-  logout = response => {
-    console.log(response);
-  };
+  logout = response => {};
 
   render() {
     return (
