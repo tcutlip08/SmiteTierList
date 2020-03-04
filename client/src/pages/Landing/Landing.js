@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
@@ -227,6 +228,7 @@ class Landing extends Component {
   };
 
   responseGoogle = response => {
+    // console.log(response)
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
@@ -394,18 +396,19 @@ class Landing extends Component {
           </Row>
           <Row className="text-center">
             <Col>
-              <button
+              <Button
                 className="btn btn-primary"
                 id="submit"
                 onClick={this.submitList}
               >
                 Submit
-              </button>
+              </Button>
             </Col>
             <Col>
-              <button className="btn btn-danger" onClick={this.resetList}>
+            {/*variant="outline-danger" instead of className="btn btn-danger"*/}
+              <Button className="btn btn-danger" onClick={this.resetList}>
                 Reset
-              </button>
+              </Button>
             </Col>
             <Col>
               <DropdownButton

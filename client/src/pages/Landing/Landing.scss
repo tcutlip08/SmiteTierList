@@ -11,12 +11,12 @@ html {
   //   height: 100%;
 }
 
-// .container {
-//   justify-content: center;
-// }
+.btn {
+  width:100%;
+}
 
 .drop-area {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.4);
   min-height: 50px;
   margin: 5px;
   padding: 5px;
@@ -45,6 +45,7 @@ img {
   color: black;
   padding: auto;
   font-size: 1.5rem;
+  text-align: center;
 }
 
 .tier {
