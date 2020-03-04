@@ -8,6 +8,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import axios from "axios";
 import env from "../../env.json";
+// import "./Landing.css";
 import "./Landing.scss";
 
 Modal.setAppElement("#root");
@@ -81,6 +82,7 @@ class Landing extends Component {
     for (let g = 0; g < gods.length; g++) {
       let god = gods[g]._id;
       let rank = gods[g].mode[this.state.mode.toLowerCase()];
+      console.log(rank);
 
       if (rank === 1) {
         tier.d.push({ god: god });
@@ -200,9 +202,23 @@ class Landing extends Component {
         if (tier[0]) {
           this.updateGodTier(tier);
         } else {
-          this.setState({ showModal: false, message: "All finnished" });
-          this.testPubOrPriv();
+          this.setState({
+            showModal: false,
+            message: "All finnished"
+          });
+          this.refreshUserData();
         }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  refreshUserData() {
+    axios
+      .get(`/api/user/${this.state.user._id}`)
+      .then(res => {
+        this.setState({ user: res.data, loop: false });
       })
       .catch(err => {
         console.log(err);
@@ -247,7 +263,7 @@ class Landing extends Component {
         axios
           .get(`/api/user/google/${res.data.sub}`)
           .then(res => {
-            this.setState({ user: res.data });
+            this.setState({ user: res.data, loop: false });
           })
           .catch(err => {
             axios
@@ -256,7 +272,7 @@ class Landing extends Component {
                 sub: res.data.sub
               })
               .then(res => {
-                this.setState({ user: res.data });
+                this.setState({ user: res.data, loop: false });
                 this.push_new_ID_into_god_array(res.data._id, res.data.gods);
               })
               .catch(err => {
