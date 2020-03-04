@@ -118,7 +118,7 @@ class Landing extends Component {
       let average = 0;
       for (let r = 0; r < god.rank.length; r++) {
         let rank = god.rank[r];
-        if (rank.gods[g].rank !== 0) {
+        if (rank.gods[g].mode[mode] !== 0) {
           users++;
           average = average + rank.gods[g].mode[mode];
         }
