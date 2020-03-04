@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import Modal from "react-modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
+import Modal from "react-modal";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
 import axios from "axios";
 import env from "../../env.json";
@@ -405,7 +405,7 @@ class Landing extends Component {
               </Button>
             </Col>
             <Col>
-            {/*variant="outline-danger" instead of className="btn btn-danger"*/}
+              {/*variant="outline-danger" instead of className="btn btn-danger"*/}
               <Button className="btn btn-danger" onClick={this.resetList}>
                 Reset
               </Button>
