@@ -13,10 +13,16 @@ html {
 
 .btn {
   width:100%;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-color: black !important;
+  background-image: linear-gradient(to right, black, gold, white) !important;
+  color: black !important;
 }
 
 .drop-area {
   background: rgba(0, 0, 0, 0.4);
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 215, 0, 1));
   min-height: 50px;
   margin: 5px;
   padding: 5px;
@@ -46,6 +52,8 @@ img {
   padding: auto;
   font-size: 1.5rem;
   text-align: center;
+  // background-image: linear-gradient(to right, black, gold, white);
+  border-radius: 10%;
 }
 
 .tier {
