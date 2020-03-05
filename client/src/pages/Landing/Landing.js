@@ -220,8 +220,8 @@ class Landing extends Component {
                 sub: res.data.sub
               })
               .then(res => {
+                console.log(res);
                 this.setState({ user: res.data, loop: false });
-                this.push_new_ID_into_god_array(res.data._id, res.data.gods);
               })
               .catch(err => {
                 // console.log(err);
@@ -235,20 +235,6 @@ class Landing extends Component {
 
   logOut = () => {
     this.setState({ user: "", page: "Public" });
-  };
-
-  push_new_ID_into_god_array = (id, array) => {
-    for (let g = 0; g < array.length; g++) {
-      axios
-        .put("/api/gods", {
-          godID: array[g]._id,
-          _id: id
-        })
-        .then(res => {})
-        .catch(err => {
-          // console.log(err);
-        });
-    }
   };
 
   emptyTier() {
