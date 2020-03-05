@@ -7,8 +7,11 @@ const GodsSchema = new Schema({
   name: { type: String },
   rank: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "User"
+      _id: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+      },
+      mode: { duel: Number, joust: Number, conquest: Number }
     }
   ]
 });
