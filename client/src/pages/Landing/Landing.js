@@ -38,42 +38,37 @@ class Landing extends Component {
   };
 
   componentDidMount() {
-    this.getPubTierList();
+    this.getGodList();
   }
 
   componentDidUpdate() {
     if (!this.state.loop) {
-      this.testPubOrPriv();
       this.setState({ loop: true });
+      this.getGodList();
     }
   }
 
-  testPubOrPriv() {
-    if (this.state.user && !this.state.loop) {
-      this.getPubTierList();
-      this.setState({ loop: true });
-    } else {
-      this.setState({
-        page: "Public",
-        showModal: true,
-        message: "You must sign in to access this content"
-      });
-    }
-  }
-
-  getPubTierList() {
+  getGodList() {
     axios
       .get("/api/gods")
       .then(res => {
         if (this.state.page === "Public") {
           this.sepPubTierList(res.data);
         } else if (this.state.page === "Private") {
-          this.sepPrivTierList(res.data);
+          if (this.state.user) {
+            this.sepPrivTierList(res.data);
+          } else {
+            this.setState({
+              page: "Public",
+              showModal: true,
+              message: "You must sign in to access this content"
+            });
+          }
         }
       })
       .catch(err => {
         console.log(err);
-        this.getPubTierList();
+        this.getGodList();
       });
   }
 
@@ -208,34 +203,37 @@ class Landing extends Component {
           response.uc.id_token
       )
       .then(res => {
-        axios
-          .get(`/api/user/google/${res.data.sub}`)
-          .then(res => {
-            this.setState({ user: res.data, loop: false });
-          })
-          .catch(err => {
-            axios
-              .put(`/api/user/google`, {
-                email: res.data.email,
-                sub: res.data.sub
-              })
-              .then(res => {
-                console.log(res);
-                this.setState({ user: res.data, loop: false });
-              })
-              .catch(err => {
-                // console.log(err);
-              });
-          });
+        this.signInUser(res.data);
       })
       .catch(err => {
         // console.log(err);
       });
   };
 
-  logOut = () => {
-    this.setState({ user: "", page: "Public" });
-  };
+  signInUser(user) {
+    axios
+      .get(`/api/user/google/${user.sub}`)
+      .then(res => {
+        this.setState({ user: res });
+      })
+      .catch(err => {
+        this.createUser(user);
+      });
+  }
+
+  createUser(user) {
+    axios
+      .put(`/api/user/google`, {
+        email: user.email,
+        sub: user.sub
+      })
+      .then(res => {
+        this.setState({ user: res.data });
+      })
+      .catch(err => {
+        // console.log(err);
+      });
+  }
 
   emptyTier() {
     return {
@@ -251,6 +249,10 @@ class Landing extends Component {
       none: []
     };
   }
+
+  logOut = () => {
+    this.setState({ user: "", page: "Public" });
+  };
 
   onDragOver = ev => {
     ev.preventDefault();
@@ -290,7 +292,7 @@ class Landing extends Component {
   };
 
   handleClassType = evt => {
-    this.setState({ class: evt, loop: false });
+    this.setState({ class: evt });
   };
 
   handleModeType = evt => {
