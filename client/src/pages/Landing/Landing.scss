@@ -12,17 +12,26 @@ html {
 }
 
 .btn {
-  width:100%;
+  width: 100%;
   margin-top: 10px;
   margin-bottom: 20px;
   border-color: black !important;
-  background-image: linear-gradient(to right, black, gold, white) !important;
+  background-image: linear-gradient(
+    to right,
+    black,
+    rgb(240, 226, 148),
+    black
+  ) !important;
   color: black !important;
 }
 
 .drop-area {
   background: rgba(0, 0, 0, 0.4);
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 215, 0, 1));
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.25),
+    rgba(255, 255, 255, 0.25)
+  );
   min-height: 50px;
   margin: 5px;
   padding: 5px;
