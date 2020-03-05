@@ -3,8 +3,9 @@ const db = require("../models");
 module.exports = {
   findAll: function(req, res) {
     db.Gods.find(req.query)
-      .populate("User rank")
+      .populate("User rank._id")
       .then(dbModel => {
+        console.log("Fuck");
         res.json(dbModel);
       })
       .catch(err => res.status(422).json(err));
@@ -25,15 +26,43 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   update: function(req, res) {
-    // console.log(req.body);
-    db.Gods.findOneAndUpdate(
-      { _id: req.body.godID },
-      { $addToSet: { rank: req.body._id } }
-    )
-      .then(dbModel => {
-        res.json(dbModel);
-      })
-      .catch(err => res.status(422).json(err));
+    if (req.body.mode === "duel") {
+      db.Gods.update(
+        { _id: req.params.id, "rank._id": req.body.user },
+        { $set: { "rank.$.mode.duel": req.body.rank } }
+      )
+        .then(dbModel => {
+          res.json(dbModel);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(422).json(err);
+        });
+    } else if (req.body.mode === "joust") {
+      db.Gods.update(
+        { _id: req.params.id, "rank._id": req.body.user },
+        { $set: { "rank.$.mode.joust": req.body.rank } }
+      )
+        .then(dbModel => {
+          res.json(dbModel);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(422).json(err);
+        });
+    } else if (req.body.mode === "conquest") {
+      db.Gods.update(
+        { _id: req.params.id, "rank._id": req.body.user },
+        { $set: { "rank.$.mode.conquest": req.body.rank } }
+      )
+        .then(dbModel => {
+          res.json(dbModel);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(422).json(err);
+        });
+    }
   },
   remove: function(req, res) {
     db.Gods.findById({ _id: req.params.id })

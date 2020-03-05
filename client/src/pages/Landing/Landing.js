@@ -42,6 +42,7 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
+    // console.log("Fuck");
     if (!this.state.loop) {
       this.testPubOrPriv();
       this.setState({ loop: true });
@@ -49,19 +50,15 @@ class Landing extends Component {
   }
 
   testPubOrPriv() {
-    if (this.state.page === "Public") {
+    if (this.state.user && !this.state.loop) {
       this.getPubTierList();
-    } else if (this.state.page === "Private") {
-      if (this.state.user) {
-        this.sepPrivTierList(this.state.user.gods);
-        this.setState({ loop: true });
-      } else {
-        this.setState({
-          page: "Public",
-          showModal: true,
-          message: "You must sign in to access this content"
-        });
-      }
+      this.setState({ loop: true });
+    } else {
+      this.setState({
+        page: "Public",
+        showModal: true,
+        message: "You must sign in to access this content"
+      });
     }
   }
 
@@ -69,49 +66,56 @@ class Landing extends Component {
     axios
       .get("/api/gods")
       .then(res => {
-        this.sepPubTierList(res.data);
+        if (this.state.page === "Public") {
+          this.sepPubTierList(res.data);
+        } else if (this.state.page === "Private") {
+          this.sepPrivTierList(res.data);
+        }
       })
       .catch(err => {
+        console.log(err);
         this.getPubTierList();
       });
+  }
+
+  sepPubTierList(gods) {
+    let tier = this.emptyTier();
+    gods.map(god => {
+      let mode = this.state.mode.toLowerCase();
+      let users = 0;
+      let average = 0;
+      god.rank.map(rank => {
+        if (god.rank.length > 0 || rank.mode[mode] !== 0) {
+          users++;
+          average = average + rank.mode[mode];
+        }
+      });
+      let rank = this.testValRank(Math.round(average / users));
+      tier[rank].push({ god: god });
+    });
+    this.setState({ tier: tier });
   }
 
   sepPrivTierList(gods) {
     let tier = this.emptyTier();
 
-    for (let g = 0; g < gods.length; g++) {
-      let god = gods[g]._id;
-      let modeRank = gods[g].mode[this.state.mode.toLowerCase()];
-
-      let rank = this.testValRank(modeRank);
-      tier[rank].push({ god: god });
-    }
-    this.setState({ tier: tier });
-  }
-
-  sepPubTierList(gods) {
-    let tier = this.emptyTier();
-
-    for (let g = 0; g < gods.length; g++) {
-      let mode = this.state.mode.toLowerCase();
-      let god = gods[g];
-      let users = 0;
-      let average = 0;
-      for (let r = 0; r < god.rank.length; r++) {
-        let rank = god.rank[r];
-        if (rank.gods[g].mode[mode] !== 0) {
-          users++;
-          average = average + rank.gods[g].mode[mode];
+    gods.map(god => {
+      god.rank.map(user => {
+        if (user._id === this.state.user._id) {
+          let val = user.mode[this.state.mode.toLowerCase()];
+          let rank = this.testValRank(val);
+          tier[rank].push({ god: god });
         }
-      }
-      let rank = this.testValRank(Math.round(average / users));
-      tier[rank].push({ god: god });
-    }
+      });
+    });
+
     this.setState({ tier: tier });
   }
 
   testValRank(val) {
-    if (val === 1) {
+    if (val === 0) {
+      return "none";
+    } else if (val === 1) {
       return "d";
     } else if (val === 2) {
       return "c";
@@ -137,33 +141,16 @@ class Landing extends Component {
   submitList = () => {
     if (this.state.user) {
       let tier = [];
-      let keys = Object.keys(this.state.tier);
-      let values = Object.values(this.state.tier);
-      for (let i = 0; i < keys.length; i++) {
-        for (let g = 0; g < values[i].length; g++) {
-          if (keys[i] === "none") {
-            tier.push({ data: values[i][g], rank: 0 });
-          } else if (keys[i] === "ss") {
-            tier.push({ data: values[i][g], rank: 9 });
-          } else if (keys[i] === "sp") {
-            tier.push({ data: values[i][g], rank: 8 });
-          } else if (keys[i] === "s") {
-            tier.push({ data: values[i][g], rank: 7 });
-          } else if (keys[i] === "ap") {
-            tier.push({ data: values[i][g], rank: 6 });
-          } else if (keys[i] === "a") {
-            tier.push({ data: values[i][g], rank: 5 });
-          } else if (keys[i] === "bp") {
-            tier.push({ data: values[i][g], rank: 4 });
-          } else if (keys[i] === "b") {
-            tier.push({ data: values[i][g], rank: 3 });
-          } else if (keys[i] === "c") {
-            tier.push({ data: values[i][g], rank: 2 });
-          } else if (keys[i] === "d") {
-            tier.push({ data: values[i][g], rank: 1 });
-          }
-        }
-      }
+      Object.keys(this.state.tier).map((key, k) => {
+        let rank = 9 - k;
+        Object.values(this.state.tier).map((value, v) => {
+          value.map(god => {
+            if (k === v) {
+              tier.push({ god: god.god, rank: rank });
+            }
+          });
+        });
+      });
       this.setState({ showModal: true, message: "This may take a minute..." });
       this.updateGodTier(tier);
     } else {
@@ -175,9 +162,10 @@ class Landing extends Component {
   };
 
   updateGodTier(tier) {
+    let god = tier[0].god;
     axios
-      .put(`/api/user/${this.state.user._id}`, {
-        _id: tier[0].data.god._id,
+      .put(`/api/gods/${god._id}`, {
+        user: this.state.user._id,
         mode: this.state.mode.toLowerCase(),
         rank: tier[0].rank
       })
@@ -191,22 +179,10 @@ class Landing extends Component {
             message: "All finnished",
             loop: false
           });
-          this.refreshUserData();
         }
       })
       .catch(err => {
-        // console.log(err);
-      });
-  }
-
-  refreshUserData() {
-    axios
-      .get(`/api/user/${this.state.user._id}`)
-      .then(res => {
-        this.setState({ user: res.data, loop: false });
-      })
-      .catch(err => {
-        // console.log(err);
+        console.log(err);
       });
   }
 

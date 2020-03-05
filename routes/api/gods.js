@@ -6,6 +6,7 @@ router.route("/new/:class/:name").get(godsController.newGod);
 router
   .route("/:id")
   .get(godsController.findById)
+  .put(godsController.update)
   .delete(godsController.remove);
 
 router
