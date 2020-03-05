@@ -85,7 +85,8 @@ class Landing extends Component {
       let users = 0;
       let average = 0;
       god.rank.map(rank => {
-        if (god.rank.length > 0 || rank.mode[mode] !== 0) {
+        // console.log(rank);
+        if (god.rank.length > 0 && rank.mode[mode] !== 0) {
           users++;
           average = average + rank.mode[mode];
         }
@@ -98,17 +99,17 @@ class Landing extends Component {
 
   sepPrivTierList(gods) {
     let tier = this.emptyTier();
-
     gods.map(god => {
       god.rank.map(user => {
-        if (user._id === this.state.user._id) {
+        console.log(user);
+        if (user._id._id === this.state.user._id) {
           let val = user.mode[this.state.mode.toLowerCase()];
           let rank = this.testValRank(val);
           tier[rank].push({ god: god });
         }
       });
     });
-
+    console.log(tier);
     this.setState({ tier: tier });
   }
 
