@@ -42,7 +42,6 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-    // console.log("Fuck");
     if (!this.state.loop) {
       this.testPubOrPriv();
       this.setState({ loop: true });
@@ -85,7 +84,6 @@ class Landing extends Component {
       let users = 0;
       let average = 0;
       god.rank.map(rank => {
-        // console.log(rank);
         if (god.rank.length > 0 && rank.mode[mode] !== 0) {
           users++;
           average = average + rank.mode[mode];
@@ -101,7 +99,6 @@ class Landing extends Component {
     let tier = this.emptyTier();
     gods.map(god => {
       god.rank.map(user => {
-        console.log(user);
         if (user._id._id === this.state.user._id) {
           let val = user.mode[this.state.mode.toLowerCase()];
           let rank = this.testValRank(val);
@@ -109,7 +106,6 @@ class Landing extends Component {
         }
       });
     });
-    console.log(tier);
     this.setState({ tier: tier });
   }
 
