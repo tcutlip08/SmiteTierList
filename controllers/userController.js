@@ -39,7 +39,7 @@ module.exports = {
           }
         })
           .then(dbModel => {
-            res.json(dbModel);
+            res.json(user);
           })
           .catch(err => res.status(422).json(err));
       })

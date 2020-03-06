@@ -16,8 +16,19 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   newGod: function(req, res) {
-    db.Gods.create({ class: req.params.class, name: req.params.name, rank: [] })
-      .then(dbModel => res.json(dbModel))
+    db.User.find(req.query)
+      .then(user => {
+        let rank = user.map(data => {
+          return { _id: data._id, mode: { duel: 0, joust: 0, conquest: 0 } };
+        });
+        db.Gods.create({
+          class: req.params.class,
+          name: req.params.name,
+          rank: rank
+        })
+          .then(dbModel => res.json(dbModel))
+          .catch(err => res.status(422).json(err));
+      })
       .catch(err => res.status(422).json(err));
   },
   create: function(req, res) {
