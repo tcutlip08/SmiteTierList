@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   email: { type: String, unique: true },
-  sub: { type: String, unique: true }
+  sub: { type: String, unique: true },
+  mod: { type: Boolean, default: false },
+  banned: { type: Boolean, default: false }
 });
 
 const User = mongoose.model("User", userSchema);

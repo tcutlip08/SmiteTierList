@@ -204,7 +204,7 @@ class Landing extends Component {
       )
       .then(res => {
         // console.log(res.data.sub);
-        this.signInUser(res.data.sub);
+        this.signInUser(res.data);
       })
       .catch(err => {
         // console.log(err);
@@ -213,9 +213,9 @@ class Landing extends Component {
 
   signInUser(user) {
     axios
-      .get(`/api/user/google/${user}`)
+      .get(`/api/user/google/${user.sub}`)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.setState({ user: res.data });
       })
       .catch(err => {
@@ -400,9 +400,9 @@ class Landing extends Component {
                 title={this.state.mode}
                 onSelect={this.handleModeType}
               >
-                <Dropdown.Item eventKey="Conquest">Conquest</Dropdown.Item>
-                <Dropdown.Item eventKey="Joust">Joust</Dropdown.Item>
                 <Dropdown.Item eventKey="Duel">Duel</Dropdown.Item>
+                <Dropdown.Item eventKey="Joust">Joust</Dropdown.Item>
+                <Dropdown.Item eventKey="Conquest">Conquest</Dropdown.Item>
               </DropdownButton>
             </Col>
           </Row>
