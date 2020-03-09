@@ -25,9 +25,19 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   create: function(req, res) {
+    let mod = false;
+    let email = req.body.email.toLowerCase();
+    if (
+      email === "tcutlip08@gmail.com" ||
+      email === "sexcrexsi@gmail.com" ||
+      email === "jessman51386@gmail.com"
+    ) {
+      mod = true;
+    }
     db.User.create({
       email: req.body.email,
-      sub: req.body.sub
+      sub: req.body.sub,
+      mod: mod
     })
       .then(user => {
         db.Gods.updateMany(req.query, {
