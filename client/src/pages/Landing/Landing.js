@@ -27,8 +27,17 @@ const customStyles = {
 
 class Landing extends Component {
   state = {
-    message: "",
-    showModal: false,
+    modal: {
+      message: "",
+      show: false,
+      btnVal: ""
+    },
+    troll: {
+      checking: false,
+      godArray: [],
+      currentUser: 0,
+      totalUsers: 0
+    },
     mode: "Duel",
     class: "All",
     page: "Public",
@@ -52,17 +61,23 @@ class Landing extends Component {
     axios
       .get("/api/gods")
       .then(res => {
-        if (this.state.page === "Public") {
-          this.sepPubTierList(res.data);
-        } else if (this.state.page === "Private") {
-          if (this.state.user) {
-            this.sepPrivTierList(res.data);
-          } else {
-            this.setState({
-              page: "Public",
-              showModal: true,
-              message: "You must sign in to access this content"
-            });
+        if (this.state.troll.checking) {
+          this.checkForTrolls(res.data);
+        } else {
+          if (this.state.page === "Public") {
+            this.sepPubTierList(res.data);
+          } else if (this.state.page === "Private") {
+            if (this.state.user) {
+              this.sepPrivTierList(res.data);
+            } else {
+              this.handleOpenModal(
+                "You must sign in to access this content",
+                false
+              );
+              this.setState({
+                page: "Public"
+              });
+            }
           }
         }
       })
@@ -104,6 +119,37 @@ class Landing extends Component {
     this.setState({ tier: tier });
   }
 
+  startCheckForTrolls = () => {
+    console.log("Fuck, #NateWasHere");
+    this.setState({ troll: { checking: true } });
+    this.getGodList();
+  };
+
+  endCheckForTrolls = () => {
+    this.setState({ troll: { checking: false } });
+    this.getGodList();
+  };
+
+  checkForTrolls = gods => {
+    this.setState({ troll: { godArray: gods } });
+    let tier = this.emptyTier();
+    gods.map(god => {
+      let mode = this.state.mode.toLowerCase();
+      let users = 0;
+      let average = 0;
+      god.rank.map(rank => {
+        if (god.rank.length > 0 && rank.mode[mode] !== 0) {
+          users++;
+          average = average + rank.mode[mode];
+        }
+      });
+      let rank = this.testValRank(Math.round(average / users));
+      tier[rank].push({ god: god });
+    });
+    // this.setState({ tier: tier });
+    console.log(tier);
+  };
+
   testValRank(val) {
     if (val === 0) {
       return "none";
@@ -143,13 +189,10 @@ class Landing extends Component {
           });
         });
       });
-      this.setState({ showModal: true, message: "This may take a minute..." });
+      this.handleOpenModal("This may take a minute...");
       this.updateGodTier(tier);
     } else {
-      this.setState({
-        showModal: true,
-        message: "You must sign in to access this content"
-      });
+      this.handleOpenModal("You must sign in to access this content");
     }
   };
 
@@ -166,11 +209,7 @@ class Landing extends Component {
         if (tier[0]) {
           this.updateGodTier(tier);
         } else {
-          this.setState({
-            showModal: false,
-            message: "All finnished",
-            loop: false
-          });
+          this.handleCancelModal();
         }
       })
       .catch(err => {
@@ -285,8 +324,18 @@ class Landing extends Component {
     });
   };
 
-  handleCloseModal = () => {
-    this.setState({ showModal: false, message: "" });
+  handleOpenModal = (message, cancelBtn) => {
+    this.setState({
+      modal: { show: true, message: message, btnVal: cancelBtn }
+    });
+  };
+
+  handleOkButton = () => {
+    this.setState({ modal: {} });
+  };
+
+  handleCancelModal = () => {
+    this.setState({ modal: { show: false, message: "", btnVal: "" } });
   };
 
   handlePubOrPriv = evt => {
@@ -373,6 +422,29 @@ class Landing extends Component {
                 Reset
               </Button>
             </Col>
+            {this.state.user.mod ? (
+              this.state.troll.checking ? (
+                <Col>
+                  <Button
+                    className="btn btn-success"
+                    onClick={this.endCheckForTrolls}
+                  >
+                    Stop Search
+                  </Button>
+                </Col>
+              ) : (
+                <Col>
+                  <Button
+                    className="btn btn-success"
+                    onClick={this.startCheckForTrolls}
+                  >
+                    Check 4 Trolls
+                  </Button>
+                </Col>
+              )
+            ) : (
+              ""
+            )}
             <Col>
               <DropdownButton
                 title={this.state.page}
@@ -406,6 +478,39 @@ class Landing extends Component {
               </DropdownButton>
             </Col>
           </Row>
+          {this.state.troll.checking ? (
+            <Row className="text-center">
+              <Col>
+                <Button
+                  className="btn btn-primary"
+                  id="submit"
+                  // onClick={this.submitList}
+                >
+                  {`< Previous`}
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  className="btn btn-primary"
+                  id="submit"
+                  // onClick={this.submitList}
+                >
+                  {`Troll`}
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  className="btn btn-primary"
+                  id="submit"
+                  // onClick={this.submitList}
+                >
+                  {`Next >`}
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
           <Row className="tier-list">
             <Col>
               {Object.keys(tier).map(t => (
@@ -430,13 +535,16 @@ class Landing extends Component {
         </Container>
         <Container>
           <Modal
-            isOpen={this.state.showModal}
-            onRequestClose={this.handleCloseModal}
+            isOpen={this.state.modal.show}
+            onRequestClose={this.handleCancelModal}
             contentLabel="Error"
             style={customStyles}
           >
-            <h3>{this.state.message}</h3>
-            <button className="btn btn-primary" onClick={this.handleCloseModal}>
+            <h3>{this.state.modal.message}</h3>
+            <button
+              className="btn btn-primary"
+              onClick={this.handleCancelModal}
+            >
               Ok
             </button>
           </Modal>
