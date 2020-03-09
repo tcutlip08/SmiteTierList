@@ -196,14 +196,15 @@ class Landing extends Component {
   };
 
   responseGoogle = response => {
-    // console.log(response)
+    // console.log(response);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
           response.uc.id_token
       )
       .then(res => {
-        this.signInUser(res.data);
+        // console.log(res.data.sub);
+        this.signInUser(res.data.sub);
       })
       .catch(err => {
         // console.log(err);
@@ -212,9 +213,10 @@ class Landing extends Component {
 
   signInUser(user) {
     axios
-      .get(`/api/user/google/${user.sub}`)
+      .get(`/api/user/google/${user}`)
       .then(res => {
-        this.setState({ user: res });
+        console.log(res);
+        this.setState({ user: res.data });
       })
       .catch(err => {
         this.createUser(user);
