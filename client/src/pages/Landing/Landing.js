@@ -100,9 +100,11 @@ class Landing extends Component {
           users++;
           average = average + rank.mode[mode];
         }
+        return "";
       });
       let rank = this.testValRank(Math.round(average / users));
       tier[rank].push({ god: god });
+      return "";
     });
     this.setState({ tier: tier });
   }
@@ -116,7 +118,9 @@ class Landing extends Component {
           let rank = this.testValRank(val);
           tier[rank].push({ god: god });
         }
+        return "";
       });
+      return "";
     });
     this.setState({ tier: tier });
   }
@@ -167,6 +171,7 @@ class Landing extends Component {
         god.rank[this.state.troll.currentUser].mode[mode]
       );
       tier[rank].push({ god: god });
+      return "";
     });
     this.setState({ tier: tier });
   }
@@ -283,8 +288,11 @@ class Landing extends Component {
           if (k === v) {
             tier.push({ god: god.god, rank: rank });
           }
+          return "";
         });
+        return "";
       });
+      return "";
     });
     this.updateGodTier(tier);
   }
@@ -471,7 +479,10 @@ class Landing extends Component {
         }
         return "";
       });
-      return "";
+      Object.keys(this.state.tier).map(t => {
+        tier[t] = tier[t].sort((a, b) => (a.key > b.key ? 1 : -1));
+        return "";
+      });
     });
 
     return (
