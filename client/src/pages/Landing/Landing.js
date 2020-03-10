@@ -84,7 +84,7 @@ class Landing extends Component {
         }
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
         this.getGodList();
       });
   }
@@ -244,7 +244,6 @@ class Landing extends Component {
   }
 
   areYouSure(funcCall) {
-    console.log(this.state.modal);
     if (this.state.modal.btnVal === "") {
       setTimeout(() => {
         this.areYouSure(funcCall);
@@ -308,7 +307,7 @@ class Landing extends Component {
         }
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       });
   }
 
@@ -330,14 +329,12 @@ class Landing extends Component {
   };
 
   responseGoogle = response => {
-    // console.log(response);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
           response.uc.id_token
       )
       .then(res => {
-        // console.log(res.data.sub);
         this.signInUser(res.data);
       })
       .catch(err => {
@@ -349,7 +346,6 @@ class Landing extends Component {
     axios
       .get(`/api/user/google/${user.sub}`)
       .then(res => {
-        // console.log(res);
         this.setState({ user: res.data });
       })
       .catch(err => {

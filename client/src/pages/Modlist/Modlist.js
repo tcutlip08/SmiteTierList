@@ -25,9 +25,7 @@ class Modlist extends Component {
     this.getUsers();
   }
 
-  componentDidUpdate() {
-    // console.log(this.state.users[0].mod);
-  }
+  componentDidUpdate() {}
 
   getUsers() {
     axios
