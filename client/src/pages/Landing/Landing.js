@@ -30,6 +30,7 @@ class Landing extends Component {
     modal: {
       message: "",
       show: false,
+      cancelBtn: false,
       btnVal: ""
     },
     troll: {
@@ -62,7 +63,7 @@ class Landing extends Component {
       .get("/api/gods")
       .then(res => {
         if (this.state.troll.checking) {
-          this.checkForTrolls(res.data);
+          this.setTrollGodArray(res.data);
         } else {
           if (this.state.page === "Public") {
             this.sepPubTierList(res.data);
@@ -120,34 +121,92 @@ class Landing extends Component {
   }
 
   startCheckForTrolls = () => {
-    console.log("Fuck, #NateWasHere");
-    this.setState({ troll: { checking: true } });
+    this.setState({
+      troll: {
+        checking: true,
+        godArray: [],
+        currentUser: 0,
+        totalUsers: 0
+      }
+    });
     this.getGodList();
   };
 
   endCheckForTrolls = () => {
-    this.setState({ troll: { checking: false } });
+    this.setState({
+      troll: {
+        checking: false,
+        godArray: [],
+        currentUser: 0,
+        totalUsers: 0
+      }
+    });
     this.getGodList();
   };
 
-  checkForTrolls = gods => {
-    this.setState({ troll: { godArray: gods } });
+  setTrollGodArray = gods => {
+    let troll = this.state.troll;
+    troll.godArray = gods;
+    troll.totalUsers = gods[0].rank.length;
+    this.setState({
+      troll: troll
+    });
+    this.displayTroll();
+  };
+
+  displayTroll() {
     let tier = this.emptyTier();
-    gods.map(god => {
+
+    this.state.troll.godArray.map(god => {
       let mode = this.state.mode.toLowerCase();
-      let users = 0;
-      let average = 0;
-      god.rank.map(rank => {
-        if (god.rank.length > 0 && rank.mode[mode] !== 0) {
-          users++;
-          average = average + rank.mode[mode];
-        }
-      });
-      let rank = this.testValRank(Math.round(average / users));
+      let rank = this.testValRank(
+        god.rank[this.state.troll.currentUser].mode[mode]
+        // console.log(god)
+      );
       tier[rank].push({ god: god });
     });
-    // this.setState({ tier: tier });
-    console.log(tier);
+    this.setState({ tier: tier });
+  }
+
+  trollFound = () => {
+    this.handleOpenModal(
+      "You're about to ruin someones day, Are you sure?",
+      true
+    );
+    this.areYouSure("troll");
+  };
+
+  trollConfirmed = () => {
+    // let troll = this.state.troll;
+    // if (troll.currentUser === 0) {
+    //   this.handleOpenModal("There aren't anymore previous Users", false);
+    // } else {
+    //   troll.currentUser -= 1;
+    //   this.setState({ troll: troll });
+    // }
+    // this.displayTroll();
+  };
+
+  nextTroll = () => {
+    let troll = this.state.troll;
+    if (troll.currentUser === troll.totalUsers - 1) {
+      this.handleOpenModal("This is the last User", false);
+    } else {
+      troll.currentUser += 1;
+      this.setState({ troll: troll });
+    }
+    this.displayTroll();
+  };
+
+  prevTroll = () => {
+    let troll = this.state.troll;
+    if (troll.currentUser === 0) {
+      this.handleOpenModal("There aren't anymore previous Users", false);
+    } else {
+      troll.currentUser -= 1;
+      this.setState({ troll: troll });
+    }
+    this.displayTroll();
   };
 
   testValRank(val) {
@@ -176,25 +235,52 @@ class Landing extends Component {
     }
   }
 
+  areYouSure(funcCall) {
+    console.log(this.state.modal);
+    if (this.state.modal.btnVal === "") {
+      setTimeout(() => {
+        this.areYouSure(funcCall);
+      }, 1000);
+    } else {
+      if (this.state.modal.btnVal) {
+        if (funcCall === "submit") {
+          this.submitListConfirmed(this.state.modal.btnVal);
+        } else if (funcCall === "troll") {
+          this.trollConfirmed(this.state.modal.btnVal);
+        }
+      }
+      this.setState({
+        modal: { show: false, message: "", cancelBtn: false, btnVal: "" }
+      });
+    }
+  }
+
   submitList = () => {
     if (this.state.user) {
-      let tier = [];
-      Object.keys(this.state.tier).map((key, k) => {
-        let rank = 9 - k;
-        Object.values(this.state.tier).map((value, v) => {
-          value.map(god => {
-            if (k === v) {
-              tier.push({ god: god.god, rank: rank });
-            }
-          });
-        });
-      });
-      this.handleOpenModal("This may take a minute...");
-      this.updateGodTier(tier);
+      this.handleOpenModal(
+        "This is going to over write current data! Are you sure?",
+        true
+      );
+      this.areYouSure("submit");
     } else {
-      this.handleOpenModal("You must sign in to access this content");
+      this.handleOpenModal("You must sign in to access this content", false);
     }
   };
+
+  submitListConfirmed() {
+    let tier = [];
+    Object.keys(this.state.tier).map((key, k) => {
+      let rank = 9 - k;
+      Object.values(this.state.tier).map((value, v) => {
+        value.map(god => {
+          if (k === v) {
+            tier.push({ god: god.god, rank: rank });
+          }
+        });
+      });
+    });
+    this.updateGodTier(tier);
+  }
 
   updateGodTier(tier) {
     let god = tier[0].god;
@@ -207,9 +293,10 @@ class Landing extends Component {
       .then(res => {
         tier.splice(0, 1);
         if (tier[0]) {
+          this.handleOpenModal("This may take a minute...", false);
           this.updateGodTier(tier);
         } else {
-          this.handleCancelModal();
+          this.handleCancelButton();
         }
       })
       .catch(err => {
@@ -292,7 +379,7 @@ class Landing extends Component {
   }
 
   logOut = () => {
-    this.setState({ user: "", page: "Public" });
+    this.setState({ user: "", page: "Public", troll: { checking: false } });
   };
 
   onDragOver = ev => {
@@ -326,16 +413,20 @@ class Landing extends Component {
 
   handleOpenModal = (message, cancelBtn) => {
     this.setState({
-      modal: { show: true, message: message, btnVal: cancelBtn }
+      modal: { show: true, message: message, cancelBtn: cancelBtn, btnVal: "" }
     });
   };
 
   handleOkButton = () => {
-    this.setState({ modal: {} });
+    this.setState({
+      modal: { show: false, message: "", cancelBtn: false, btnVal: true }
+    });
   };
 
-  handleCancelModal = () => {
-    this.setState({ modal: { show: false, message: "", btnVal: "" } });
+  handleCancelButton = () => {
+    this.setState({
+      modal: { show: false, message: "", cancelBtn: false, btnVal: false }
+    });
   };
 
   handlePubOrPriv = evt => {
@@ -484,7 +575,7 @@ class Landing extends Component {
                 <Button
                   className="btn btn-primary"
                   id="submit"
-                  // onClick={this.submitList}
+                  onClick={this.prevTroll}
                 >
                   {`< Previous`}
                 </Button>
@@ -493,7 +584,7 @@ class Landing extends Component {
                 <Button
                   className="btn btn-primary"
                   id="submit"
-                  // onClick={this.submitList}
+                  onClick={this.trollFound}
                 >
                   {`Troll`}
                 </Button>
@@ -502,7 +593,7 @@ class Landing extends Component {
                 <Button
                   className="btn btn-primary"
                   id="submit"
-                  // onClick={this.submitList}
+                  onClick={this.nextTroll}
                 >
                   {`Next >`}
                 </Button>
@@ -536,17 +627,35 @@ class Landing extends Component {
         <Container>
           <Modal
             isOpen={this.state.modal.show}
-            onRequestClose={this.handleCancelModal}
+            onRequestClose={this.handleCancelButton}
             contentLabel="Error"
             style={customStyles}
           >
-            <h3>{this.state.modal.message}</h3>
-            <button
-              className="btn btn-primary"
-              onClick={this.handleCancelModal}
-            >
-              Ok
-            </button>
+            <Row>
+              <h3>{this.state.modal.message}</h3>
+            </Row>
+            <Row>
+              <Col>
+                <button
+                  className="btn btn-primary"
+                  onClick={this.handleOkButton}
+                >
+                  Ok
+                </button>
+              </Col>
+              {this.state.modal.cancelBtn ? (
+                <Col>
+                  <button
+                    className="btn btn-primary"
+                    onClick={this.handleCancelButton}
+                  >
+                    Cancel
+                  </button>
+                </Col>
+              ) : (
+                ""
+              )}
+            </Row>
           </Modal>
         </Container>
       </>
