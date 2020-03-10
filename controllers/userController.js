@@ -67,7 +67,10 @@ module.exports = {
       });
   },
   modById: function(req, res) {
-    db.User.update({ _id: req.params.id }, { $set: { mod: req.body.mod } })
+    db.User.update(
+      { _id: req.params.id },
+      { $set: { mod: req.body.mod, banned: req.body.banned } }
+    )
       .then(dbModel => {
         res.json(dbModel);
       })

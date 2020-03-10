@@ -40,11 +40,22 @@ class Modlist extends Component {
       });
   }
 
-  changeCheckBox = event => {
+  changeModCheckBox = event => {
     const { name, checked } = event.target;
     let newArray = this.state.users.map(user => {
       if (user._id === name && !this.state.authed.includes(user.email)) {
         user.mod = checked;
+      }
+      return user;
+    });
+    this.setState({ users: newArray });
+  };
+
+  changeBannedCheckBox = event => {
+    const { name, checked } = event.target;
+    let newArray = this.state.users.map(user => {
+      if (user._id === name && !this.state.authed.includes(user.email)) {
+        user.banned = checked;
       }
       return user;
     });
@@ -56,7 +67,10 @@ class Modlist extends Component {
     if (user) {
       if (!this.state.authed.includes(user.email)) {
         axios
-          .put(`/api/user/mod/${user._id}`, { mod: user.mod })
+          .put(`/api/user/mod/${user._id}`, {
+            mod: user.mod,
+            banned: user.banned
+          })
           .then(res => {
             users.splice(0, 1);
             this.submit(users);
@@ -110,9 +124,18 @@ class Modlist extends Component {
                           type="checkbox"
                           name={data._id}
                           defaultChecked={data.mod}
-                          onChange={this.changeCheckBox}
+                          onChange={this.changeModCheckBox}
                         />
                         <span>Mod</span>
+                      </Col>
+                      <Col className="Checkbox">
+                        <input
+                          type="checkbox"
+                          name={data._id}
+                          defaultChecked={data.banned}
+                          onChange={this.changeBannedCheckBox}
+                        />
+                        <span>Banned</span>
                       </Col>
                     </Row>
                   </Col>
