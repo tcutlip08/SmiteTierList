@@ -26,7 +26,7 @@ class Modlist extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state.users[0].mod);
+    // console.log(this.state.users[0].mod);
   }
 
   getUsers() {
@@ -119,6 +119,8 @@ class Modlist extends Component {
                   <Col className="user">
                     <Row>
                       <Col>{`Email: ${data.email}`}</Col>
+                    </Row>
+                    <Row>
                       <Col className="Checkbox">
                         <input
                           type="checkbox"
