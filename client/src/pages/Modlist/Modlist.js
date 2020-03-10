@@ -16,7 +16,8 @@ class Modlist extends Component {
     authed: [
       "tcutlip08@gmail.com",
       "sexcrexsi@gmail.com",
-      "jessman51386@gmail.com"
+      "jessman51386@gmail.com",
+      "rosykittenlove@gmail.com"
     ]
   };
 

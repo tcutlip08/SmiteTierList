@@ -30,7 +30,8 @@ module.exports = {
     if (
       email === "tcutlip08@gmail.com" ||
       email === "sexcrexsi@gmail.com" ||
-      email === "jessman51386@gmail.com"
+      email === "jessman51386@gmail.com" ||
+      email === "rosykittenlove@gmail.com"
     ) {
       mod = true;
     }
