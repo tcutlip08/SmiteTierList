@@ -116,7 +116,7 @@ class Modlist extends Component {
             <Row>
               {this.state.users.map(data => {
                 return (
-                  <Col className="user">
+                  <Col className="user" xs={4}>
                     <Row>
                       <Col>{`Email: ${data.email}`}</Col>
                     </Row>
