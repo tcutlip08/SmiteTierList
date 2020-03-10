@@ -37,6 +37,7 @@ class Landing extends Component {
       checking: false,
       godArray: [],
       currentUser: 0,
+      userInfo: "",
       totalUsers: 0
     },
     mode: "Duel",
@@ -156,7 +157,10 @@ class Landing extends Component {
 
   displayTroll() {
     let tier = this.emptyTier();
-
+    let troll = this.state.troll;
+    let userInfo = troll.godArray[0].rank[troll.currentUser]._id;
+    troll.userInfo = userInfo;
+    this.setState({ troll: troll });
     this.state.troll.godArray.map(god => {
       let mode = this.state.mode.toLowerCase();
       let rank = this.testValRank(
@@ -574,35 +578,57 @@ class Landing extends Component {
             </Col>
           </Row>
           {this.state.troll.checking ? (
-            <Row className="text-center">
-              <Col>
-                <Button
-                  className="btn btn-primary"
-                  id="submit"
-                  onClick={this.prevTroll}
-                >
-                  {`< Previous`}
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  className="btn btn-primary"
-                  id="submit"
-                  onClick={this.trollFound}
-                >
-                  {`Troll`}
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  className="btn btn-primary"
-                  id="submit"
-                  onClick={this.nextTroll}
-                >
-                  {`Next >`}
-                </Button>
-              </Col>
-            </Row>
+            <>
+              <Row className="text-center">
+                <Col>
+                  <Button
+                    className="btn btn-primary"
+                    id="submit"
+                    onClick={this.prevTroll}
+                  >
+                    {`< Previous`}
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    className="btn btn-primary"
+                    id="submit"
+                    onClick={this.trollFound}
+                  >
+                    {`Troll`}
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    className="btn btn-primary"
+                    id="submit"
+                    onClick={this.nextTroll}
+                  >
+                    {`Next >`}
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                {this.state.troll.userInfo ? (
+                  <>
+                    <Col>{`User: ${this.state.troll.currentUser + 1} of ${
+                      this.state.troll.totalUsers
+                    }`}</Col>
+                    <Col>{this.state.troll.userInfo.email}</Col>
+                    <Col>
+                      {this.state.troll.userInfo.mod ? "Moderator" : "User"}
+                    </Col>
+                    <Col>
+                      {this.state.troll.userInfo.banned
+                        ? "Banned"
+                        : "Not Banned"}
+                    </Col>
+                  </>
+                ) : (
+                  "Loading"
+                )}
+              </Row>
+            </>
           ) : (
             ""
           )}
