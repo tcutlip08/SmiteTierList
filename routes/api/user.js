@@ -4,10 +4,13 @@ const userController = require("../../controllers/userController");
 router.route("/google/:sub").get(userController.findByGoogle);
 router.route("/google").put(userController.create);
 
+router.route("/ban/:id").put(userController.banById);
+
+router.route("/mod/:id").put(userController.modById);
+
 router
   .route("/:id")
   .get(userController.findById)
-  .put(userController.update)
   .delete(userController.remove);
 
 router

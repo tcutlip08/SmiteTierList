@@ -25,9 +25,20 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   create: function(req, res) {
+    let mod = false;
+    let email = req.body.email.toLowerCase();
+    if (
+      email === "tcutlip08@gmail.com" ||
+      email === "sexcrexsi@gmail.com" ||
+      email === "jessman51386@gmail.com" ||
+      email === "rosykittenlove@gmail.com"
+    ) {
+      mod = true;
+    }
     db.User.create({
       email: req.body.email,
-      sub: req.body.sub
+      sub: req.body.sub,
+      mod: mod
     })
       .then(user => {
         db.Gods.updateMany(req.query, {
@@ -45,8 +56,28 @@ module.exports = {
       })
       .catch(err => res.status(422).json(err));
   },
-  update: function(req, res) {
-    console.log("What are you updating stupid??");
+  banById: function(req, res) {
+    db.User.update({ _id: req.params.id }, { $set: { banned: true } })
+      .then(dbModel => {
+        res.json(dbModel);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(422).json(err);
+      });
+  },
+  modById: function(req, res) {
+    db.User.update(
+      { _id: req.params.id },
+      { $set: { mod: req.body.mod, banned: req.body.banned } }
+    )
+      .then(dbModel => {
+        res.json(dbModel);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(422).json(err);
+      });
   },
   remove: function(req, res) {
     db.User.findById({ _id: req.params.id })

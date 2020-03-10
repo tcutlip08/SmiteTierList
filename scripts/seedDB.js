@@ -12,6 +12,12 @@ mongoose.connect(
   }
 );
 
+db.User.remove({})
+  .then()
+  .catch(err => {
+    console.error(err);
+  });
+
 const godsSeed = [
   // Warriors
   { name: "Achilles", rank: [], class: "Warrior" },
@@ -134,13 +140,6 @@ db.Gods.remove({})
     console.log(data.result.n + " records inserted!");
     process.exit(0);
   })
-  .catch(err => {
-    console.error(err);
-    process.exit(1);
-  });
-
-db.User.remove({})
-  .then(() => process.exit(0))
   .catch(err => {
     console.error(err);
     process.exit(1);
