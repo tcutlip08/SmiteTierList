@@ -18,9 +18,9 @@ html {
   border-color: black !important;
   // background-image: linear-gradient(
   //   to right,
-  //   rgba(0, 0, 0, 0.1),
-  //   rgba(240, 226, 148, 0.5),
-  //   rgba(0, 0, 0, 0.1)
+  //   black,
+  //   rgb(240, 226, 148),
+  //   black
   // ) !important;
   color: black !important;
 }
@@ -60,6 +60,9 @@ img {
   border-radius: 10%;
 }
 
+#ss-label {
+  background: rgba(255, 255, 120, 0.4);
+}
 #ss {
   background-image: linear-gradient(
     to right,
@@ -70,6 +73,9 @@ img {
   );
 }
 
+#sp-label {
+  background: rgba(255, 255, 120, 0.25);
+}
 #sp {
   background-image: linear-gradient(
     to right,
@@ -80,6 +86,9 @@ img {
   );
 }
 
+#s-label {
+  background: rgba(170, 170, 80, 0.25);
+}
 #s {
   background-image: linear-gradient(
     to right,
@@ -90,6 +99,9 @@ img {
   );
 }
 
+#ap-label {
+  background: rgba(85, 85, 40, 0.25);
+}
 #ap {
   background-image: linear-gradient(
     to right,
@@ -100,6 +112,9 @@ img {
   );
 }
 
+#a-label {
+  background: rgba(0, 0, 0, 0.25);
+}
 #a {
   background-image: linear-gradient(
     to right,
@@ -110,6 +125,9 @@ img {
   );
 }
 
+#bp-label {
+  background: rgba(0, 0, 85, 0.25);
+}
 #bp {
   background-image: linear-gradient(
     to right,
@@ -120,6 +138,9 @@ img {
   );
 }
 
+#b-label {
+  background: rgba(0, 0, 170, 0.25);
+}
 #b {
   background-image: linear-gradient(
     to right,
@@ -130,6 +151,9 @@ img {
   );
 }
 
+#c-label {
+  background: rgba(0, 0, 255, 0.25);
+}
 #c {
   background-image: linear-gradient(
     to right,
@@ -139,6 +163,9 @@ img {
   );
 }
 
+#d-label {
+  background: rgba(0, 0, 255, 0.4);
+}
 #d {
   background-image: linear-gradient(
     to right,
@@ -148,6 +175,10 @@ img {
   );
 }
 
+#none-label {
+  background: rgba(255, 255, 255, 0.25);
+  display: none;
+}
 #none {
   background-image: linear-gradient(
     to right,

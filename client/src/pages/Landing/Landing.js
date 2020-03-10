@@ -646,7 +646,7 @@ class Landing extends Component {
             <Col>
               {Object.keys(tier).map(t => (
                 <Row key={t}>
-                  <Col className={`tier tier-label`} id={t} xs={1}>
+                  <Col className={`tier tier-label`} id={`${t}-label`} xs={1}>
                     {t.includes("p")
                       ? `${t[0].toUpperCase()}+`
                       : t.toUpperCase()}
