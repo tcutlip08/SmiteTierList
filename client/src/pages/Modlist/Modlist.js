@@ -113,12 +113,12 @@ class Modlist extends Component {
       <Container className="Modlist">
         {this.state.auth ? (
           <>
-            <Row>
+            <Row className="justify-content-center">
               {this.state.users.map(data => {
                 return (
-                  <Col className="user" xs={4}>
+                  <Col className="user" xs={3}>
                     <Row>
-                      <Col>{`Email: ${data.email}`}</Col>
+                      <Col>{data.email}</Col>
                     </Row>
                     <Row>
                       <Col className="Checkbox">
