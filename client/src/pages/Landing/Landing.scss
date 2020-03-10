@@ -16,12 +16,12 @@ html {
   margin-top: 10px;
   margin-bottom: 20px;
   border-color: black !important;
-  background-image: linear-gradient(
-    to right,
-    black,
-    rgb(240, 226, 148),
-    black
-  ) !important;
+  // background-image: linear-gradient(
+  //   to right,
+  //   rgba(0, 0, 0, 0.1),
+  //   rgba(240, 226, 148, 0.5),
+  //   rgba(0, 0, 0, 0.1)
+  // ) !important;
   color: black !important;
 }
 

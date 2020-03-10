@@ -515,7 +515,7 @@ class Landing extends Component {
           <Row className="text-center">
             <Col>
               <Button
-                className="btn btn-primary"
+                className="btn btn-secondary"
                 id="submit"
                 onClick={this.submitList}
               >
@@ -524,7 +524,7 @@ class Landing extends Component {
             </Col>
             <Col>
               {/*variant="outline-danger" instead of className="btn btn-danger"*/}
-              <Button className="btn btn-danger" onClick={this.resetList}>
+              <Button className="btn btn-secondary" onClick={this.resetList}>
                 Reset
               </Button>
             </Col>
@@ -532,7 +532,7 @@ class Landing extends Component {
               this.state.troll.checking ? (
                 <Col>
                   <Button
-                    className="btn btn-success"
+                    className="btn btn-secondary"
                     onClick={this.endCheckForTrolls}
                   >
                     Stop Search
@@ -541,7 +541,7 @@ class Landing extends Component {
               ) : (
                 <Col>
                   <Button
-                    className="btn btn-success"
+                    className="btn btn-secondary"
                     onClick={this.startCheckForTrolls}
                   >
                     Check 4 Trolls
@@ -553,6 +553,7 @@ class Landing extends Component {
             )}
             <Col>
               <DropdownButton
+                variant="secondary"
                 title={this.state.page}
                 onSelect={this.handlePubOrPriv}
               >
@@ -562,6 +563,7 @@ class Landing extends Component {
             </Col>
             <Col>
               <DropdownButton
+                variant="secondary"
                 title={this.state.class}
                 onSelect={this.handleClassType}
               >
@@ -575,6 +577,7 @@ class Landing extends Component {
             </Col>
             <Col>
               <DropdownButton
+                variant="secondary"
                 title={this.state.mode}
                 onSelect={this.handleModeType}
               >
@@ -589,7 +592,7 @@ class Landing extends Component {
               <Row className="text-center">
                 <Col>
                   <Button
-                    className="btn btn-primary"
+                    className="btn btn-secondary"
                     id="submit"
                     onClick={this.prevTroll}
                   >
@@ -598,7 +601,7 @@ class Landing extends Component {
                 </Col>
                 <Col>
                   <Button
-                    className="btn btn-primary"
+                    className="btn btn-secondary"
                     id="submit"
                     onClick={this.trollFound}
                   >
@@ -607,7 +610,7 @@ class Landing extends Component {
                 </Col>
                 <Col>
                   <Button
-                    className="btn btn-primary"
+                    className="btn btn-secondary"
                     id="submit"
                     onClick={this.nextTroll}
                   >
@@ -674,7 +677,7 @@ class Landing extends Component {
             <Row>
               <Col>
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-secondary"
                   onClick={this.handleOkButton}
                 >
                   Ok
@@ -683,7 +686,7 @@ class Landing extends Component {
               {this.state.modal.cancelBtn ? (
                 <Col>
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-secondary"
                     onClick={this.handleCancelButton}
                   >
                     Cancel
