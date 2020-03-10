@@ -95,7 +95,7 @@ class Landing extends Component {
       let users = 0;
       let average = 0;
       god.rank.map(rank => {
-        if (god.rank.length > 0 && rank.mode[mode] !== 0) {
+        if (god.rank.length > 0 && rank.mode[mode] !== 0 && !rank._id.banned) {
           users++;
           average = average + rank.mode[mode];
         }
@@ -161,7 +161,6 @@ class Landing extends Component {
       let mode = this.state.mode.toLowerCase();
       let rank = this.testValRank(
         god.rank[this.state.troll.currentUser].mode[mode]
-        // console.log(god)
       );
       tier[rank].push({ god: god });
     });
@@ -174,17 +173,22 @@ class Landing extends Component {
       true
     );
     this.areYouSure("troll");
+    this.trollConfirmed();
   };
 
   trollConfirmed = () => {
-    // let troll = this.state.troll;
-    // if (troll.currentUser === 0) {
-    //   this.handleOpenModal("There aren't anymore previous Users", false);
-    // } else {
-    //   troll.currentUser -= 1;
-    //   this.setState({ troll: troll });
-    // }
-    // this.displayTroll();
+    let troll = this.state.troll;
+    let user = troll.godArray[0].rank[troll.currentUser]._id;
+    if (!user.mod) {
+      axios
+        .put(`/api/user/ban/${user._id}`)
+        .then(res => {})
+        .catch(err => {
+          // console.log(err);
+        });
+    } else {
+      this.handleOpenModal("You can't ban another Mod");
+    }
   };
 
   nextTroll = () => {

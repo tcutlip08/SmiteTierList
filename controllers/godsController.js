@@ -2,6 +2,7 @@ const db = require("../models");
 
 module.exports = {
   findAll: function(req, res) {
+    console.log("Fuck");
     db.Gods.find(req.query)
       .populate("User rank._id")
       .then(dbModel => {

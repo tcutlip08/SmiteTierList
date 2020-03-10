@@ -55,8 +55,25 @@ module.exports = {
       })
       .catch(err => res.status(422).json(err));
   },
-  update: function(req, res) {
-    console.log("What are you updating stupid??");
+  banById: function(req, res) {
+    db.User.update({ _id: req.params.id }, { $set: { banned: true } })
+      .then(dbModel => {
+        res.json(dbModel);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(422).json(err);
+      });
+  },
+  modById: function(req, res) {
+    db.User.update({ _id: req.params.id }, { $set: { mod: req.body.mod } })
+      .then(dbModel => {
+        res.json(dbModel);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(422).json(err);
+      });
   },
   remove: function(req, res) {
     db.User.findById({ _id: req.params.id })
