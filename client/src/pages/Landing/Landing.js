@@ -143,7 +143,8 @@ class Landing extends Component {
         checking: false,
         godArray: [],
         currentUser: 0,
-        totalUsers: 0
+        totalUsers: 0,
+        loop: false
       }
     });
     this.getGodList();
@@ -200,25 +201,24 @@ class Landing extends Component {
     }
   };
 
-  nextTroll = () => {
+  nextTroll = val => {
     let troll = this.state.troll;
-    if (troll.currentUser === troll.totalUsers - 1) {
-      this.handleOpenModal("This is the last User", false);
+    if (val === "last" || troll.currentUser + val >= troll.totalUsers - 1) {
+      troll.currentUser = troll.totalUsers - 1;
     } else {
-      troll.currentUser += 1;
-      this.setState({ troll: troll });
+      troll.currentUser -= val;
     }
     this.displayTroll();
   };
 
-  prevTroll = () => {
+  prevTroll = val => {
     let troll = this.state.troll;
-    if (troll.currentUser === 0) {
-      this.handleOpenModal("There aren't anymore previous Users", false);
+    if (val === "first" || troll.currentUser - val <= 0) {
+      troll.currentUser = 0;
     } else {
-      troll.currentUser -= 1;
-      this.setState({ troll: troll });
+      troll.currentUser -= val;
     }
+    this.setState({ troll: troll });
     this.displayTroll();
   };
 
@@ -590,16 +590,34 @@ class Landing extends Component {
           {this.state.troll.checking ? (
             <>
               <Row className="text-center">
-                <Col>
+                <Col xs={1}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
-                    onClick={this.prevTroll}
+                    onClick={() => this.prevTroll("first")}
                   >
-                    {`< Previous`}
+                    {`First`}
                   </Button>
                 </Col>
-                <Col>
+                <Col xs={1}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.prevTroll(5)}
+                  >
+                    {`5-`}
+                  </Button>
+                </Col>
+                <Col xs={2}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.prevTroll(1)}
+                  >
+                    {`< Prev`}
+                  </Button>
+                </Col>
+                <Col xs={4}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
@@ -608,17 +626,35 @@ class Landing extends Component {
                     {`Troll`}
                   </Button>
                 </Col>
-                <Col>
+                <Col xs={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
-                    onClick={this.nextTroll}
+                    onClick={() => this.nextTroll(1)}
                   >
                     {`Next >`}
                   </Button>
                 </Col>
+                <Col xs={1}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.nextTroll(5)}
+                  >
+                    {`5+`}
+                  </Button>
+                </Col>
+                <Col xs={1}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.nextTroll("last")}
+                  >
+                    {`Last`}
+                  </Button>
+                </Col>
               </Row>
-              <Row>
+              <Row className="troll text-center">
                 {this.state.troll.userInfo ? (
                   <>
                     <Col>{`User: ${this.state.troll.currentUser + 1} of ${
