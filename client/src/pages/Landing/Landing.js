@@ -206,7 +206,7 @@ class Landing extends Component {
     if (val === "last" || troll.currentUser + val >= troll.totalUsers - 1) {
       troll.currentUser = troll.totalUsers - 1;
     } else {
-      troll.currentUser -= val;
+      troll.currentUser += val;
     }
     this.displayTroll();
   };
