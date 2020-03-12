@@ -65,22 +65,22 @@ class Landing extends Component {
       .then(res => {
         if (this.state.troll.checking) {
           this.setTrollGodArray(res.data);
-        } else {
-          if (this.state.page === "Public") {
-            this.sepPubTierList(res.data);
-          } else if (this.state.page === "Private") {
-            if (this.state.user) {
-              this.sepPrivTierList(res.data);
-            } else {
-              this.handleOpenModal(
-                "You must sign in to access this content",
-                false
-              );
-              this.setState({
-                page: "Public"
-              });
-            }
+        } else if (this.state.page === "Public") {
+          this.sepPubTierList(res.data);
+        } else if (this.state.page === "Private") {
+          if (this.state.user) {
+            this.sepPrivTierList(res.data);
+          } else {
+            this.handleOpenModal(
+              "You must sign in to access this content",
+              false
+            );
+            this.setState({
+              page: "Public"
+            });
           }
+        } else {
+          this.bigNameUserList(res.data, this.state.page);
         }
       })
       .catch(err => {
@@ -119,6 +119,25 @@ class Landing extends Component {
           tier[rank].push({ god: god });
         }
         return "";
+      });
+      return "";
+    });
+    this.setState({ tier: tier });
+  }
+
+  bigNameUserList(gods, bigName) {
+    let tier = this.emptyTier();
+    gods.map(god => {
+      god.rank.map(user => {
+        if (bigName === "Rexsi") {
+          if (user._id.email === "sexcrexsi@gmail.com") {
+            let val = user.mode[this.state.mode.toLowerCase()];
+            let rank = this.testValRank(val);
+            tier[rank].push({ god: god });
+            console.log(tier);
+          }
+          return "";
+        }
       });
       return "";
     });
@@ -558,6 +577,7 @@ class Landing extends Component {
                 onSelect={this.handlePubOrPriv}
               >
                 <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
+                <Dropdown.Item eventKey="Rexsi">Rexsi</Dropdown.Item>
                 <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
               </DropdownButton>
             </Col>
