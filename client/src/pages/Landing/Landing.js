@@ -202,7 +202,6 @@ class Landing extends Component {
       true
     );
     this.areYouSure("troll");
-    this.trollConfirmed();
   };
 
   trollConfirmed = () => {
@@ -278,6 +277,8 @@ class Landing extends Component {
           this.submitListConfirmed(this.state.modal.btnVal);
         } else if (funcCall === "troll") {
           this.trollConfirmed(this.state.modal.btnVal);
+        } else if (funcCall === "reset") {
+          this.resetConfirmed(this.state.modal.btnVal);
         }
       }
       this.setState({
@@ -339,6 +340,11 @@ class Landing extends Component {
   }
 
   resetList = () => {
+    this.handleOpenModal("Are you sure you wish to reset?", true);
+    this.areYouSure("reset");
+  };
+
+  resetConfirmed() {
     let tier = this.state.tier;
     let keys = Object.keys(tier);
     let values = Object.values(tier);
@@ -353,7 +359,7 @@ class Landing extends Component {
     let newTier = this.emptyTier();
     newTier.none = tier.none;
     this.setState({ tier: newTier });
-  };
+  }
 
   responseGoogle = response => {
     axios
