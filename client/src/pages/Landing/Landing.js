@@ -704,6 +704,18 @@ class Landing extends Component {
           ) : (
             ""
           )}
+          {this.state.user.banned ? (
+            <Row className="banned text-center">
+              <Col>
+                <b>
+                  You have been banned for being a troll. Contact Rexsi, Rosy,
+                  or CutLip to appeal
+                </b>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
           <Row className="tier-list">
             <Col>
               {Object.keys(tier).map(t => (
