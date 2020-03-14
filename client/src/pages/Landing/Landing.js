@@ -236,7 +236,7 @@ class Landing extends Component {
 
   findNextValidTroll() {
     let troll = this.state.troll;
-    for (let u = troll.currentUser; u < troll.totalUsers; ++u) {
+    for (let u = troll.currentUser + 1; u < troll.totalUsers; u++) {
       let user = troll.godArray[0].rank[u];
       if (!user._id.banned && !user._id.mod) {
         for (let g = 0; g < troll.godArray.length; g++) {
