@@ -1,6 +1,8 @@
 .App {
     background-color: rgb(43, 43, 43);
+    /* background-image: url("../src/assets/img/Rexsi/apallo-background-trimmed.jpg"); */
     background-image: url("../src/assets/img/Rexsi/Full_Banner_w_Fade.png");
+    /* background-image: url("../src/assets/img/Rexsi/gold-background.png"); */
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;

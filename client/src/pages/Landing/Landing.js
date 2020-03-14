@@ -221,7 +221,12 @@ class Landing extends Component {
 
   nextTroll = val => {
     let troll = this.state.troll;
-    if (val === "last" || troll.currentUser + val >= troll.totalUsers - 1) {
+    if (troll.currentUser === troll.totalUsers - 1) {
+      this.handleOpenModal("This is the end of the line", false);
+      troll.currentUser = troll.totalUsers - 1;
+    } else if (val === 0) {
+      this.findNextValidTroll();
+    } else if (val === "last") {
       troll.currentUser = troll.totalUsers - 1;
     } else {
       troll.currentUser += val;
@@ -229,16 +234,57 @@ class Landing extends Component {
     this.displayTroll();
   };
 
+  findNextValidTroll() {
+    let troll = this.state.troll;
+    for (let u = troll.currentUser; u < troll.totalUsers; ++u) {
+      let user = troll.godArray[0].rank[u];
+      if (!user._id.banned && !user._id.mod) {
+        for (let g = 0; g < troll.godArray.length; g++) {
+          let rank = troll.godArray[g].rank[u];
+          if (rank.mode[this.state.mode.toLowerCase()] !== 0) {
+            troll.currentUser = u;
+            troll.userInfo = user._id;
+            this.setState({ troll: troll });
+            return;
+          }
+        }
+      }
+    }
+    this.nextTroll("last");
+  }
+
   prevTroll = val => {
     let troll = this.state.troll;
-    if (val === "first" || troll.currentUser - val <= 0) {
+    if (troll.currentUser === 0) {
+      this.handleOpenModal("This is the end of the line", false);
+    } else if (val === 0) {
+      this.findPrevValidTroll();
+    } else if (val === "first") {
       troll.currentUser = 0;
     } else {
       troll.currentUser -= val;
     }
-    this.setState({ troll: troll });
     this.displayTroll();
   };
+
+  findPrevValidTroll() {
+    let troll = this.state.troll;
+    for (let u = troll.currentUser - 1; u >= 0; u--) {
+      let user = troll.godArray[0].rank[u];
+      if (!user._id.banned && !user._id.mod) {
+        for (let g = 0; g < troll.godArray.length; g++) {
+          let rank = troll.godArray[g].rank[u];
+          if (rank.mode[this.state.mode.toLowerCase()] !== 0) {
+            troll.currentUser = u;
+            troll.userInfo = user._id;
+            this.setState({ troll: troll });
+            return;
+          }
+        }
+      }
+    }
+    this.prevTroll("first");
+  }
 
   testValRank(val) {
     if (val === 0) {
@@ -625,13 +671,13 @@ class Landing extends Component {
                     {`First`}
                   </Button>
                 </Col>
-                <Col xs={1}>
+                <Col xs={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
-                    onClick={() => this.prevTroll(5)}
+                    onClick={() => this.prevTroll(0)}
                   >
-                    {`5-`}
+                    {`Prev Valid`}
                   </Button>
                 </Col>
                 <Col xs={2}>
@@ -643,7 +689,7 @@ class Landing extends Component {
                     {`< Prev`}
                   </Button>
                 </Col>
-                <Col xs={4}>
+                <Col xs={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
@@ -661,13 +707,13 @@ class Landing extends Component {
                     {`Next >`}
                   </Button>
                 </Col>
-                <Col xs={1}>
+                <Col xs={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
-                    onClick={() => this.nextTroll(5)}
+                    onClick={() => this.nextTroll(0)}
                   >
-                    {`5+`}
+                    {`Next Valid`}
                   </Button>
                 </Col>
                 <Col xs={1}>
