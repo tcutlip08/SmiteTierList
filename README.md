@@ -21,13 +21,17 @@ Drop down buttons include:
     Joust - Displays tier list submited to the Joust gamemode
     Conquest - Displays tier list submited to the Conquest gamemode
 
+_Note:_ All tier lists are affected by each drop down value chosen
+
 ## Technologies Used
 
 React - JavaScript Library designed for building User Interfaces
 Mongoose – Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment.
 Express – Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 Node.js – Node.js is an open-source, cross-platform, JavaScript runtime environment that executes JavaScript code outside of a browser.
-Request - Request is designed to be the simplest way possible to make http calls. It supports HTTPS and follows redirects by default.
+Axios - Axios is designed to be the simplest way possible to make http calls. It supports HTTPS and follows redirects by default.
+Drag and Drop - Using some default onClick onDrag and onDrop functions we were able to manipulate the redistributing of each item.
+Google Auth - Using Google for our authentication for each user.
 
 ## Get Started
 
@@ -72,10 +76,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## APP DEMO
 
-A demo of this program can be accessed at this deployed link: https://smite-randomizer-tnc.herokuapp.com/
-
-## API DEMO
-
-A Demo of this program can be accessed at this link: https://twitch.tv/cutthelip
-
-At this site there is a bot called _Nightbot_ that is listening 24/7. **\*note** In order to access the bots command you'll have to link your twitch account to the nightbot website (https://nightbot.tv)
+A demo of this program can be accessed at this deployed link: https://smite-tier-list-tnc.herokuapp.com/
