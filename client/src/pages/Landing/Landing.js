@@ -65,22 +65,22 @@ class Landing extends Component {
       .then(res => {
         if (this.state.troll.checking) {
           this.setTrollGodArray(res.data);
-        } else {
-          if (this.state.page === "Public") {
-            this.sepPubTierList(res.data);
-          } else if (this.state.page === "Private") {
-            if (this.state.user) {
-              this.sepPrivTierList(res.data);
-            } else {
-              this.handleOpenModal(
-                "You must sign in to access this content",
-                false
-              );
-              this.setState({
-                page: "Public"
-              });
-            }
+        } else if (this.state.page === "Public") {
+          this.sepPubTierList(res.data);
+        } else if (this.state.page === "Private") {
+          if (this.state.user) {
+            this.sepPrivTierList(res.data);
+          } else {
+            this.handleOpenModal(
+              "You must sign in to access this content",
+              false
+            );
+            this.setState({
+              page: "Public"
+            });
           }
+        } else {
+          this.bigNameUserList(res.data, this.state.page);
         }
       })
       .catch(err => {
@@ -125,6 +125,25 @@ class Landing extends Component {
     this.setState({ tier: tier });
   }
 
+  bigNameUserList(gods, bigName) {
+    let tier = this.emptyTier();
+    gods.map(god => {
+      god.rank.map(user => {
+        if (bigName === "Rexsi") {
+          if (user._id.email === "sexcrexsi@gmail.com") {
+            let val = user.mode[this.state.mode.toLowerCase()];
+            let rank = this.testValRank(val);
+            tier[rank].push({ god: god });
+            console.log(tier);
+          }
+          return "";
+        }
+      });
+      return "";
+    });
+    this.setState({ tier: tier });
+  }
+
   startCheckForTrolls = () => {
     this.setState({
       troll: {
@@ -143,7 +162,8 @@ class Landing extends Component {
         checking: false,
         godArray: [],
         currentUser: 0,
-        totalUsers: 0
+        totalUsers: 0,
+        loop: false
       }
     });
     this.getGodList();
@@ -182,7 +202,6 @@ class Landing extends Component {
       true
     );
     this.areYouSure("troll");
-    this.trollConfirmed();
   };
 
   trollConfirmed = () => {
@@ -200,27 +219,72 @@ class Landing extends Component {
     }
   };
 
-  nextTroll = () => {
+  nextTroll = val => {
     let troll = this.state.troll;
     if (troll.currentUser === troll.totalUsers - 1) {
-      this.handleOpenModal("This is the last User", false);
+      this.handleOpenModal("This is the end of the line", false);
+      troll.currentUser = troll.totalUsers - 1;
+    } else if (val === 0) {
+      this.findNextValidTroll();
+    } else if (val === "last") {
+      troll.currentUser = troll.totalUsers - 1;
     } else {
-      troll.currentUser += 1;
-      this.setState({ troll: troll });
+      troll.currentUser += val;
     }
     this.displayTroll();
   };
 
-  prevTroll = () => {
+  findNextValidTroll() {
+    let troll = this.state.troll;
+    for (let u = troll.currentUser + 1; u < troll.totalUsers; u++) {
+      let user = troll.godArray[0].rank[u];
+      if (!user._id.banned && !user._id.mod) {
+        for (let g = 0; g < troll.godArray.length; g++) {
+          let rank = troll.godArray[g].rank[u];
+          if (rank.mode[this.state.mode.toLowerCase()] !== 0) {
+            troll.currentUser = u;
+            troll.userInfo = user._id;
+            this.setState({ troll: troll });
+            return;
+          }
+        }
+      }
+    }
+    this.nextTroll("last");
+  }
+
+  prevTroll = val => {
     let troll = this.state.troll;
     if (troll.currentUser === 0) {
-      this.handleOpenModal("There aren't anymore previous Users", false);
+      this.handleOpenModal("This is the end of the line", false);
+    } else if (val === 0) {
+      this.findPrevValidTroll();
+    } else if (val === "first") {
+      troll.currentUser = 0;
     } else {
-      troll.currentUser -= 1;
-      this.setState({ troll: troll });
+      troll.currentUser -= val;
     }
     this.displayTroll();
   };
+
+  findPrevValidTroll() {
+    let troll = this.state.troll;
+    for (let u = troll.currentUser - 1; u >= 0; u--) {
+      let user = troll.godArray[0].rank[u];
+      if (!user._id.banned && !user._id.mod) {
+        for (let g = 0; g < troll.godArray.length; g++) {
+          let rank = troll.godArray[g].rank[u];
+          if (rank.mode[this.state.mode.toLowerCase()] !== 0) {
+            troll.currentUser = u;
+            troll.userInfo = user._id;
+            this.setState({ troll: troll });
+            return;
+          }
+        }
+      }
+    }
+    this.prevTroll("first");
+  }
 
   testValRank(val) {
     if (val === 0) {
@@ -259,6 +323,8 @@ class Landing extends Component {
           this.submitListConfirmed(this.state.modal.btnVal);
         } else if (funcCall === "troll") {
           this.trollConfirmed(this.state.modal.btnVal);
+        } else if (funcCall === "reset") {
+          this.resetConfirmed(this.state.modal.btnVal);
         }
       }
       this.setState({
@@ -320,6 +386,11 @@ class Landing extends Component {
   }
 
   resetList = () => {
+    this.handleOpenModal("Are you sure you wish to reset?", true);
+    this.areYouSure("reset");
+  };
+
+  resetConfirmed() {
     let tier = this.state.tier;
     let keys = Object.keys(tier);
     let values = Object.values(tier);
@@ -334,7 +405,7 @@ class Landing extends Component {
     let newTier = this.emptyTier();
     newTier.none = tier.none;
     this.setState({ tier: newTier });
-  };
+  }
 
   responseGoogle = response => {
     axios
@@ -558,6 +629,7 @@ class Landing extends Component {
                 onSelect={this.handlePubOrPriv}
               >
                 <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
+                <Dropdown.Item eventKey="Rexsi">Rexsi</Dropdown.Item>
                 <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
               </DropdownButton>
             </Col>
@@ -590,16 +662,34 @@ class Landing extends Component {
           {this.state.troll.checking ? (
             <>
               <Row className="text-center">
-                <Col>
+                <Col xs={1}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
-                    onClick={this.prevTroll}
+                    onClick={() => this.prevTroll("first")}
                   >
-                    {`< Previous`}
+                    {`First`}
                   </Button>
                 </Col>
-                <Col>
+                <Col xs={2}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.prevTroll(0)}
+                  >
+                    {`Prev Valid`}
+                  </Button>
+                </Col>
+                <Col xs={2}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.prevTroll(1)}
+                  >
+                    {`< Prev`}
+                  </Button>
+                </Col>
+                <Col xs={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
@@ -608,17 +698,35 @@ class Landing extends Component {
                     {`Troll`}
                   </Button>
                 </Col>
-                <Col>
+                <Col xs={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
-                    onClick={this.nextTroll}
+                    onClick={() => this.nextTroll(1)}
                   >
                     {`Next >`}
                   </Button>
                 </Col>
+                <Col xs={2}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.nextTroll(0)}
+                  >
+                    {`Next Valid`}
+                  </Button>
+                </Col>
+                <Col xs={1}>
+                  <Button
+                    className="btn btn-secondary"
+                    id="submit"
+                    onClick={() => this.nextTroll("last")}
+                  >
+                    {`Last`}
+                  </Button>
+                </Col>
               </Row>
-              <Row>
+              <Row className="troll text-center">
                 {this.state.troll.userInfo ? (
                   <>
                     <Col>{`User: ${this.state.troll.currentUser + 1} of ${
@@ -639,6 +747,18 @@ class Landing extends Component {
                 )}
               </Row>
             </>
+          ) : (
+            ""
+          )}
+          {this.state.user.banned ? (
+            <Row className="banned text-center">
+              <Col>
+                <b>
+                  You have been banned for being a troll. Contact Rexsi, Rosy,
+                  or CutLip to appeal
+                </b>
+              </Col>
+            </Row>
           ) : (
             ""
           )}
