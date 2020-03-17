@@ -2,7 +2,24 @@
 
 ### `About This App`
 
-Full Stack Application designed to make decision making easy aswell as easy to access. You don't have to access this app strictly from visiting the hosted site on heroku. Instead you can use the API routes provided below.
+A MERN Stack Application designed to display characters from a game called Smite inside of a Tier List based off of drop down values provided.
+
+Drop down buttons include:
+
+    Public - Shows the community average for each individual character and places them accordingly
+    Private - Shows only what you have submited on your account
+    Populars - Shows tier lists that Popular users have submited
+
+    All - Displays all characters
+    Mage - Displays only Mage characters
+    Hunter - Displays only Hunter characters
+    Assassin - Displays only Assassin characters
+    Warrior - Displays only Warrior characters
+    Guardian - Displays only Guardian characters
+
+    Duel - Displays tier list submited to the Duel gamemode
+    Joust - Displays tier list submited to the Joust gamemode
+    Conquest - Displays tier list submited to the Conquest gamemode
 
 ## Technologies Used
 
