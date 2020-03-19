@@ -534,18 +534,20 @@ class Landing extends Component {
           (this.state.class === g.god.class || this.state.class === "All")
         ) {
           tier[t].push(
-            <img
-              src={`http://www.smitetierlist.com/gods/${g.god.name
-                .toLowerCase()
-                .split(" ")
-                .join("")}.jpg`}
-              className={`item-container ${g.god.class}`}
-              key={g.god.name}
-              title={g.god.god}
-              draggable
-              onDragStart={e => this.onDragStart(e, g.god.name)}
-              alt={g.god.name}
-            />
+            <Col className="item-container" xs={1} key={g.god.name}>
+              <p id="god-name">{g.god.name}</p>
+              <img
+                src={`http://www.smitetierlist.com/gods/${g.god.name
+                  .toLowerCase()
+                  .split(" ")
+                  .join("")}.jpg`}
+                className={`${g.god.class}`}
+                title={g.god.god}
+                draggable
+                onDragStart={e => this.onDragStart(e, g.god.name)}
+                alt={g.god.name}
+              />
+            </Col>
           );
         }
         return "";
@@ -622,7 +624,7 @@ class Landing extends Component {
               </Button>
             </Col>
           </Row>
-          <Row className="text-center justify-content-center" md={6}>
+          <Row className="text-center justify-content-center" xs={6}>
             <Col>
               <DropdownButton
                 variant="secondary"
@@ -778,7 +780,7 @@ class Landing extends Component {
                     onDragOver={e => this.onDragOver(e)}
                     onDrop={e => this.onDrop(e, t)}
                   >
-                    {tier[t]}
+                    <Row className="justify-content-left">{tier[t]}</Row>
                   </Col>
                 </Row>
               ))}
