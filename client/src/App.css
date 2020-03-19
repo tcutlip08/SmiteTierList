@@ -1,11 +1,16 @@
 .App {
     background-color: rgb(43, 43, 43);
-    /* background-image: url("../src/assets/img/Rexsi/apallo-background-trimmed.jpg"); */
     background-image: url("../src/assets/img/Rexsi/Full_Banner_w_Fade.png");
-    /* background-image: url("../src/assets/img/Rexsi/gold-background.png"); */
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    /* background-size: 100% 100%; */
+    background-size: 100% auto;
     z-index: 0;
+}
+
+@media only screen and (max-width: 995px) {
+    .App {
+        background-image: url("../src/assets/img/Rexsi/Square_Icon.png");
+        background-size: auto 100%;
+    }
 }

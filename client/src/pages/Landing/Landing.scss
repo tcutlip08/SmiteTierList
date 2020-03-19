@@ -59,6 +59,21 @@ img {
   border-radius: 10%;
 }
 
+@media only screen and (max-width: 995px) {
+  .tier-label {
+    background-color: auto, auto, auto, 0.75;
+    color: black;
+    padding: 5px;
+    font-size: 2rem;
+    text-align: center;
+    border-radius: 10%;
+  }
+
+  img {
+    width: 5rem;
+  }
+}
+
 #ss-label {
   background: rgba(255, 255, 120, 0.4);
 }

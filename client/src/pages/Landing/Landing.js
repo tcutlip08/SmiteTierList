@@ -583,20 +583,14 @@ class Landing extends Component {
               </span>
             </Col>
           </Row>
-          <Row className="text-center">
-            <Col>
+          <Row className="text-center justify-content-center">
+            <Col xs={4}>
               <Button
                 className="btn btn-secondary"
                 id="submit"
                 onClick={this.submitList}
               >
                 Submit
-              </Button>
-            </Col>
-            <Col>
-              {/*variant="outline-danger" instead of className="btn btn-danger"*/}
-              <Button className="btn btn-secondary" onClick={this.resetList}>
-                Reset
               </Button>
             </Col>
             {this.state.user.mod ? (
@@ -622,6 +616,13 @@ class Landing extends Component {
             ) : (
               ""
             )}
+            <Col xs={4}>
+              <Button className="btn btn-secondary" onClick={this.resetList}>
+                Reset
+              </Button>
+            </Col>
+          </Row>
+          <Row className="text-center justify-content-center" md={6}>
             <Col>
               <DropdownButton
                 variant="secondary"
