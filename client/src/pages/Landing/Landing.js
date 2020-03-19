@@ -665,34 +665,38 @@ class Landing extends Component {
           {this.state.troll.checking ? (
             <>
               <Row className="text-center">
-                <Col xs={1}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.prevTroll("first")}
-                  >
-                    {`First`}
-                  </Button>
+                <Col>
+                  <Row md={1} lg={3}>
+                    <Col md={{ order: 1 }} lg={{ order: 1 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.prevTroll("first")}
+                      >
+                        {`First`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 6 }} lg={{ order: 6 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.prevTroll(0)}
+                      >
+                        {`Prev Valid`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 12 }} lg={{ order: 12 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.prevTroll(1)}
+                      >
+                        {`< Prev`}
+                      </Button>
+                    </Col>
+                  </Row>
                 </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.prevTroll(0)}
-                  >
-                    {`Prev Valid`}
-                  </Button>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.prevTroll(1)}
-                  >
-                    {`< Prev`}
-                  </Button>
-                </Col>
-                <Col xs={2}>
+                <Col md={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
@@ -701,32 +705,36 @@ class Landing extends Component {
                     {`Troll`}
                   </Button>
                 </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.nextTroll(1)}
-                  >
-                    {`Next >`}
-                  </Button>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.nextTroll(0)}
-                  >
-                    {`Next Valid`}
-                  </Button>
-                </Col>
-                <Col xs={1}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.nextTroll("last")}
-                  >
-                    {`Last`}
-                  </Button>
+                <Col>
+                  <Row md={1} lg={3}>
+                    <Col md={{ order: 12 }} lg={{ order: 1 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.nextTroll(1)}
+                      >
+                        {`Next >`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 1 }} lg={{ order: 6 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.nextTroll(0)}
+                      >
+                        {`Next Valid`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 6 }} lg={{ order: 12 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.nextTroll("last")}
+                      >
+                        {`Last`}
+                      </Button>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
               <Row className="troll text-center">
