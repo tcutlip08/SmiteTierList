@@ -534,7 +534,7 @@ class Landing extends Component {
           (this.state.class === g.god.class || this.state.class === "All")
         ) {
           tier[t].push(
-            <Col className="item-container" xs={1} key={g.god.name}>
+            <Col className="item-container" md={2} lg={1} key={g.god.name}>
               <p id="god-name">{g.god.name}</p>
               <img
                 src={`http://www.smitetierlist.com/gods/${g.god.name
