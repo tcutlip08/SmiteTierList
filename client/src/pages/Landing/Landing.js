@@ -60,32 +60,77 @@ class Landing extends Component {
   }
 
   getGodList() {
+    if (this.state.troll.checking) {
+      this.getAll();
+    } else if (this.state.page === "Public") {
+      this.getValid();
+    } else if (this.state.page === "Private") {
+      if (this.state.user) {
+        this.getPriv();
+      } else {
+        this.handleOpenModal("You must sign in to access this content", false);
+        this.setState({
+          page: "Public"
+        });
+      }
+    } else {
+      this.getBigName();
+    }
+  }
+
+  getAll() {
     axios
       .get("/api/gods")
       .then(res => {
-        if (this.state.troll.checking) {
-          this.setTrollGodArray(res.data);
-        } else if (this.state.page === "Public") {
-          this.sepPubTierList(res.data);
-        } else if (this.state.page === "Private") {
-          if (this.state.user) {
-            this.sepPrivTierList(res.data);
-          } else {
-            this.handleOpenModal(
-              "You must sign in to access this content",
-              false
-            );
-            this.setState({
-              page: "Public"
-            });
-          }
-        } else {
-          this.bigNameUserList(res.data, this.state.page);
-        }
+        this.setTrollGodArray(res.data);
       })
       .catch(err => {
         // console.log(err);
-        this.getGodList();
+        this.getAll();
+      });
+  }
+
+  getValid() {
+    axios
+      .get("/api/gods/public")
+      .then(res => {
+        this.sepPubTierList(res.data);
+      })
+      .catch(err => {
+        // console.log(err);
+        this.getValid();
+      });
+  }
+
+  getPriv() {
+    axios
+      .get(`/api/gods/private/${this.state.user._id}`)
+      .then(res => {
+        this.sepPrivTierList(res.data);
+      })
+      .catch(err => {
+        // console.log(err);
+        this.getPriv();
+      });
+  }
+
+  getBigName() {
+    let email;
+    if (this.state.page === "Rexsi") {
+      email = "sexcrexsi@gmail.com";
+      // email = "tcutlip08@gmail.com";
+    }
+    axios
+      .get(`/api/gods/bigName/${email}`)
+      .then(res => {
+        this.sepPrivTierList(res.data);
+      })
+      .catch(err => {
+        // console.log(err);
+        this.handleOpenModal(
+          "Sorry there was an unexpected error, try again.",
+          false
+        );
       });
   }
 
@@ -96,7 +141,7 @@ class Landing extends Component {
       let users = 0;
       let average = 0;
       god.rank.map(rank => {
-        if (god.rank.length > 0 && rank.mode[mode] !== 0 && !rank._id.banned) {
+        if (rank.mode[mode] > 0) {
           users++;
           average = average + rank.mode[mode];
         }
@@ -113,31 +158,10 @@ class Landing extends Component {
     let tier = this.emptyTier();
     gods.map(god => {
       god.rank.map(user => {
-        if (user._id._id === this.state.user._id) {
-          let val = user.mode[this.state.mode.toLowerCase()];
-          let rank = this.testValRank(val);
-          tier[rank].push({ god: god });
-        }
+        let val = user.mode[this.state.mode.toLowerCase()];
+        let rank = this.testValRank(val);
+        tier[rank].push({ god: god });
         return "";
-      });
-      return "";
-    });
-    this.setState({ tier: tier });
-  }
-
-  bigNameUserList(gods, bigName) {
-    let tier = this.emptyTier();
-    gods.map(god => {
-      god.rank.map(user => {
-        if (bigName === "Rexsi") {
-          if (user._id.email === "sexcrexsi@gmail.com") {
-            let val = user.mode[this.state.mode.toLowerCase()];
-            let rank = this.testValRank(val);
-            tier[rank].push({ god: god });
-            console.log(tier);
-          }
-          return "";
-        }
       });
       return "";
     });
@@ -151,7 +175,8 @@ class Landing extends Component {
         godArray: [],
         currentUser: 0,
         totalUsers: 0
-      }
+      },
+      loop: false
     });
     this.getGodList();
   };
@@ -162,9 +187,9 @@ class Landing extends Component {
         checking: false,
         godArray: [],
         currentUser: 0,
-        totalUsers: 0,
-        loop: false
-      }
+        totalUsers: 0
+      },
+      loop: false
     });
     this.getGodList();
   };
@@ -556,6 +581,7 @@ class Landing extends Component {
         tier[t] = tier[t].sort((a, b) => (a.key > b.key ? 1 : -1));
         return "";
       });
+      return "";
     });
 
     return (

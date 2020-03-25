@@ -2,12 +2,69 @@ const db = require("../models");
 
 module.exports = {
   findAll: function(req, res) {
-    console.log("Fuck");
     db.Gods.find(req.query)
       .populate("User rank._id")
       .then(dbModel => {
-        console.log("Fuck");
         res.json(dbModel);
+      })
+      .catch(err => res.status(422).json(err));
+  },
+  findPublic: function(req, res) {
+    db.Gods.find(req.query)
+      .populate("User rank._id")
+      .then(dbModel => {
+        let gods = dbModel.map(god => {
+          let users = [];
+          god.rank.map(user => {
+            if (!user._id.banned) {
+              users.push(user);
+            }
+          });
+          god.rank = users;
+          return god;
+        });
+        res.json(gods);
+      })
+      .catch(err => res.status(422).json(err));
+  },
+  findPrivate: function(req, res) {
+    db.Gods.find(req.query)
+      .populate("User rank._id")
+      .then(dbModel => {
+        let user;
+        dbModel[0].rank.map((data, i) => {
+          if (data._id._id == req.params.id) {
+            user = i;
+          }
+        });
+
+        let gods = dbModel.map(god => {
+          god.rank = god.rank[user];
+          return god;
+        });
+
+        res.json(gods);
+      })
+      .catch(err => res.status(422).json(err));
+  },
+  findBigName: function(req, res) {
+    db.Gods.find(req.query)
+      .populate("User rank._id")
+      .then(dbModel => {
+        let user;
+        dbModel[0].rank.map((data, i) => {
+          if (data._id.email == req.params.email) {
+            user = i;
+          }
+        });
+        console.log(user);
+
+        let gods = dbModel.map(god => {
+          god.rank = god.rank[user];
+          return god;
+        });
+
+        res.json(gods);
       })
       .catch(err => res.status(422).json(err));
   },
