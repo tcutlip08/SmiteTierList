@@ -6,6 +6,7 @@ const userSchema = new Schema({
   sub: { type: String, unique: true },
   mod: { type: Boolean, default: false },
   banned: { type: Boolean, default: false }
+  // updated: { type: String, default: Date(Date.now()) }
 });
 
 const User = mongoose.model("User", userSchema);

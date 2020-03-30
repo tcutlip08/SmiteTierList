@@ -84,5 +84,18 @@ module.exports = {
       .then(dbModel => dbModel.remove())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
+  },
+  fixTime: function(req, res) {
+    db.User.update(
+      { email: "tcutlip08@gmail.com" },
+      { updated: Date(Date.now()) }
+    )
+      .then(dbModel => {
+        res.json(dbModel);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(422).json(err);
+      });
   }
 };

@@ -49,6 +49,7 @@ class Landing extends Component {
   };
 
   componentDidMount() {
+    console.log(Date(Date.now()).split(" ")[3]);
     this.getGodList();
   }
 
@@ -119,6 +120,8 @@ class Landing extends Component {
     if (this.state.page === "Rexsi") {
       email = "sexcrexsi@gmail.com";
       // email = "tcutlip08@gmail.com";
+    } else if (this.state.page === "Face") {
+      email = "facieeray@gmail.com";
     }
     axios
       .get(`/api/gods/bigName/${email}`)
@@ -659,6 +662,7 @@ class Landing extends Component {
               >
                 <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
                 <Dropdown.Item eventKey="Rexsi">Rexsi</Dropdown.Item>
+                <Dropdown.Item eventKey="Face">Face</Dropdown.Item>
                 <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
               </DropdownButton>
             </Col>
