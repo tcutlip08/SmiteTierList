@@ -57,7 +57,6 @@ module.exports = {
             user = i;
           }
         });
-        console.log(user);
 
         let gods = dbModel.map(god => {
           god.rank = god.rank[user];

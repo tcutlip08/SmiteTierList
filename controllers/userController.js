@@ -86,10 +86,7 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   fixTime: function(req, res) {
-    db.User.update(
-      { email: "tcutlip08@gmail.com" },
-      { updated: Date(Date.now()) }
-    )
+    db.User.update(req.query, { updated: Date(Date.now()) })
       .then(dbModel => {
         res.json(dbModel);
       })
