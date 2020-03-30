@@ -405,7 +405,14 @@ class Landing extends Component {
           this.handleOpenModal("This may take a minute...", false);
           this.updateGodTier(tier);
         } else {
-          this.handleCancelButton();
+          axios
+            .put(`/api/user/${this.state.user._id}`)
+            .then(res => {
+              this.handleCancelButton();
+            })
+            .catch(err => {
+              // console.log(err);
+            });
         }
       })
       .catch(err => {

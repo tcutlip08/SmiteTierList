@@ -13,7 +13,7 @@ router.route("/mod/:id").put(userController.modById);
 router
   .route("/:id")
   .get(userController.findById)
-  .delete(userController.remove);
+  .put(userController.updateTime);
 
 router
   .route("/")
