@@ -49,7 +49,6 @@ class Landing extends Component {
   };
 
   componentDidMount() {
-    console.log(Date(Date.now()).split(" ")[3]);
     this.getGodList();
   }
 
@@ -137,6 +136,60 @@ class Landing extends Component {
       });
   }
 
+  monthToNum(m) {
+    if (m === "Jan") {
+      return 1;
+    } else if (m === "Feb") {
+      return 2;
+    } else if (m === "Mar") {
+      return 3;
+    } else if (m === "Apr") {
+      return 4;
+    } else if (m === "May") {
+      return 5;
+    } else if (m === "Jun") {
+      return 6;
+    } else if (m === "Jul") {
+      return 7;
+    } else if (m === "Aug") {
+      return 8;
+    } else if (m === "Sep") {
+      return 9;
+    } else if (m === "Oct") {
+      return 10;
+    } else if (m === "Nov") {
+      return 11;
+    } else if (m === "Dec") {
+      return 12;
+    } else {
+      return 0;
+    }
+  }
+
+  validateTime(date) {
+    let userDate = date.split(" ");
+    let userMonth = this.monthToNum(userDate[1]);
+    let userYear = parseInt(userDate[3]);
+    let currentDate = Date(Date.now()).split(" ");
+    let currentMonth = this.monthToNum(currentDate[1]);
+    let currentYear = parseInt(currentDate[3]);
+    if (currentYear === userYear) {
+      if (currentMonth - 6 > userMonth) {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (currentYear - 1 === userYear) {
+      if (currentMonth + 6 > userMonth) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
   sepPubTierList(gods) {
     let tier = this.emptyTier();
     gods.map(god => {
@@ -144,7 +197,8 @@ class Landing extends Component {
       let users = 0;
       let average = 0;
       god.rank.map(rank => {
-        if (rank.mode[mode] > 0) {
+        let valid = this.validateTime(rank._id.updated);
+        if (rank.mode[mode] > 0 && valid) {
           users++;
           average = average + rank.mode[mode];
         }
