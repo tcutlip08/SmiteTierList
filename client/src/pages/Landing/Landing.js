@@ -21,8 +21,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 class Landing extends Component {
@@ -31,21 +31,21 @@ class Landing extends Component {
       message: "",
       show: false,
       cancelBtn: false,
-      btnVal: ""
+      btnVal: "",
     },
     troll: {
       checking: false,
       godArray: [],
       currentUser: 0,
       userInfo: "",
-      totalUsers: 0
+      totalUsers: 0,
     },
     mode: "Duel",
     class: "All",
     page: "Public",
     loop: true,
     user: "",
-    tier: this.emptyTier()
+    tier: this.emptyTier(),
   };
 
   componentDidMount() {
@@ -70,7 +70,7 @@ class Landing extends Component {
       } else {
         this.handleOpenModal("You must sign in to access this content", false);
         this.setState({
-          page: "Public"
+          page: "Public",
         });
       }
     } else {
@@ -81,10 +81,10 @@ class Landing extends Component {
   getAll() {
     axios
       .get("/api/gods")
-      .then(res => {
+      .then((res) => {
         this.setTrollGodArray(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
         this.getAll();
       });
@@ -93,10 +93,10 @@ class Landing extends Component {
   getValid() {
     axios
       .get("/api/gods/public")
-      .then(res => {
+      .then((res) => {
         this.sepPubTierList(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
         this.getValid();
       });
@@ -105,10 +105,10 @@ class Landing extends Component {
   getPriv() {
     axios
       .get(`/api/gods/private/${this.state.user._id}`)
-      .then(res => {
+      .then((res) => {
         this.sepPrivTierList(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
         this.getPriv();
       });
@@ -124,10 +124,10 @@ class Landing extends Component {
     }
     axios
       .get(`/api/gods/bigName/${email}`)
-      .then(res => {
+      .then((res) => {
         this.sepPrivTierList(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
         this.handleOpenModal(
           "Sorry there was an unexpected error, try again.",
@@ -192,11 +192,11 @@ class Landing extends Component {
 
   sepPubTierList(gods) {
     let tier = this.emptyTier();
-    gods.map(god => {
+    gods.map((god) => {
       let mode = this.state.mode.toLowerCase();
       let users = 0;
       let average = 0;
-      god.rank.map(rank => {
+      god.rank.map((rank) => {
         let valid = this.validateTime(rank._id.updated);
         if (rank.mode[mode] > 0 && valid) {
           users++;
@@ -213,8 +213,8 @@ class Landing extends Component {
 
   sepPrivTierList(gods) {
     let tier = this.emptyTier();
-    gods.map(god => {
-      god.rank.map(user => {
+    gods.map((god) => {
+      god.rank.map((user) => {
         let val = user.mode[this.state.mode.toLowerCase()];
         let rank = this.testValRank(val);
         tier[rank].push({ god: god });
@@ -231,9 +231,9 @@ class Landing extends Component {
         checking: true,
         godArray: [],
         currentUser: 0,
-        totalUsers: 0
+        totalUsers: 0,
       },
-      loop: false
+      loop: false,
     });
     this.getGodList();
   };
@@ -244,19 +244,19 @@ class Landing extends Component {
         checking: false,
         godArray: [],
         currentUser: 0,
-        totalUsers: 0
+        totalUsers: 0,
       },
-      loop: false
+      loop: false,
     });
     this.getGodList();
   };
 
-  setTrollGodArray = gods => {
+  setTrollGodArray = (gods) => {
     let troll = this.state.troll;
     troll.godArray = gods;
     troll.totalUsers = gods[0].rank.length;
     this.setState({
-      troll: troll
+      troll: troll,
     });
     this.displayTroll();
   };
@@ -267,7 +267,7 @@ class Landing extends Component {
     let userInfo = troll.godArray[0].rank[troll.currentUser]._id;
     troll.userInfo = userInfo;
     this.setState({ troll: troll });
-    this.state.troll.godArray.map(god => {
+    this.state.troll.godArray.map((god) => {
       let mode = this.state.mode.toLowerCase();
       let rank = this.testValRank(
         god.rank[this.state.troll.currentUser].mode[mode]
@@ -292,8 +292,8 @@ class Landing extends Component {
     if (!user.mod) {
       axios
         .put(`/api/user/ban/${user._id}`)
-        .then(res => {})
-        .catch(err => {
+        .then((res) => {})
+        .catch((err) => {
           // console.log(err);
         });
     } else {
@@ -301,7 +301,7 @@ class Landing extends Component {
     }
   };
 
-  nextTroll = val => {
+  nextTroll = (val) => {
     let troll = this.state.troll;
     if (troll.currentUser === troll.totalUsers - 1) {
       this.handleOpenModal("This is the end of the line", false);
@@ -335,7 +335,7 @@ class Landing extends Component {
     this.nextTroll("last");
   }
 
-  prevTroll = val => {
+  prevTroll = (val) => {
     let troll = this.state.troll;
     if (troll.currentUser === 0) {
       this.handleOpenModal("This is the end of the line", false);
@@ -410,7 +410,7 @@ class Landing extends Component {
         }
       }
       this.setState({
-        modal: { show: false, message: "", cancelBtn: false, btnVal: "" }
+        modal: { show: false, message: "", cancelBtn: false, btnVal: "" },
       });
     }
   }
@@ -432,7 +432,7 @@ class Landing extends Component {
     Object.keys(this.state.tier).map((key, k) => {
       let rank = 9 - k;
       Object.values(this.state.tier).map((value, v) => {
-        value.map(god => {
+        value.map((god) => {
           if (k === v) {
             tier.push({ god: god.god, rank: rank });
           }
@@ -451,9 +451,9 @@ class Landing extends Component {
       .put(`/api/gods/${god._id}`, {
         user: this.state.user._id,
         mode: this.state.mode.toLowerCase(),
-        rank: tier[0].rank
+        rank: tier[0].rank,
       })
-      .then(res => {
+      .then((res) => {
         tier.splice(0, 1);
         if (tier[0]) {
           this.handleOpenModal("This may take a minute...", false);
@@ -461,15 +461,15 @@ class Landing extends Component {
         } else {
           axios
             .put(`/api/user/${this.state.user._id}`)
-            .then(res => {
+            .then((res) => {
               this.handleCancelButton();
             })
-            .catch(err => {
+            .catch((err) => {
               // console.log(err);
             });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
       });
   }
@@ -496,16 +496,17 @@ class Landing extends Component {
     this.setState({ tier: newTier });
   }
 
-  responseGoogle = response => {
+  responseGoogle = (response) => {
+    console.log(response.tokenId);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
-          response.uc.id_token
+          response.tokenId
       )
-      .then(res => {
+      .then((res) => {
         this.signInUser(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
       });
   };
@@ -513,10 +514,10 @@ class Landing extends Component {
   signInUser(user) {
     axios
       .get(`/api/user/google/${user.sub}`)
-      .then(res => {
+      .then((res) => {
         this.setState({ user: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         this.createUser(user);
       });
   }
@@ -525,12 +526,12 @@ class Landing extends Component {
     axios
       .put(`/api/user/google`, {
         email: user.email,
-        sub: user.sub
+        sub: user.sub,
       })
-      .then(res => {
+      .then((res) => {
         this.setState({ user: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
       });
   }
@@ -546,7 +547,7 @@ class Landing extends Component {
       b: [],
       c: [],
       d: [],
-      none: []
+      none: [],
     };
   }
 
@@ -554,7 +555,7 @@ class Landing extends Component {
     this.setState({ user: "", page: "Public", troll: { checking: false } });
   };
 
-  onDragOver = ev => {
+  onDragOver = (ev) => {
     ev.preventDefault();
   };
 
@@ -567,8 +568,8 @@ class Landing extends Component {
 
     let tier = this.emptyTier();
 
-    Object.keys(this.state.tier).forEach(t => {
-      this.state.tier[t].map(god => {
+    Object.keys(this.state.tier).forEach((t) => {
+      this.state.tier[t].map((god) => {
         if (god.god.name === name) {
           tier[newTier].push(god);
         } else {
@@ -579,45 +580,45 @@ class Landing extends Component {
     });
 
     this.setState({
-      tier: tier
+      tier: tier,
     });
   };
 
   handleOpenModal = (message, cancelBtn) => {
     this.setState({
-      modal: { show: true, message: message, cancelBtn: cancelBtn, btnVal: "" }
+      modal: { show: true, message: message, cancelBtn: cancelBtn, btnVal: "" },
     });
   };
 
   handleOkButton = () => {
     this.setState({
-      modal: { show: false, message: "", cancelBtn: false, btnVal: true }
+      modal: { show: false, message: "", cancelBtn: false, btnVal: true },
     });
   };
 
   handleCancelButton = () => {
     this.setState({
-      modal: { show: false, message: "", cancelBtn: false, btnVal: false }
+      modal: { show: false, message: "", cancelBtn: false, btnVal: false },
     });
   };
 
-  handlePubOrPriv = evt => {
+  handlePubOrPriv = (evt) => {
     this.setState({ page: evt, loop: false });
   };
 
-  handleClassType = evt => {
+  handleClassType = (evt) => {
     this.setState({ class: evt });
   };
 
-  handleModeType = evt => {
+  handleModeType = (evt) => {
     this.setState({ mode: evt, loop: false });
   };
 
   render() {
     let tier = this.emptyTier();
 
-    Object.keys(this.state.tier).map(t => {
-      this.state.tier[t].map(g => {
+    Object.keys(this.state.tier).map((t) => {
+      this.state.tier[t].map((g) => {
         if (
           g.god.name &&
           (this.state.class === g.god.class || this.state.class === "All")
@@ -633,7 +634,7 @@ class Landing extends Component {
                 className={`${g.god.class}`}
                 title={g.god.god}
                 draggable
-                onDragStart={e => this.onDragStart(e, g.god.name)}
+                onDragStart={(e) => this.onDragStart(e, g.god.name)}
                 alt={g.god.name}
               />
             </Col>
@@ -641,7 +642,7 @@ class Landing extends Component {
         }
         return "";
       });
-      Object.keys(this.state.tier).map(t => {
+      Object.keys(this.state.tier).map((t) => {
         tier[t] = tier[t].sort((a, b) => (a.key > b.key ? 1 : -1));
         return "";
       });
@@ -866,7 +867,7 @@ class Landing extends Component {
           )}
           <Row className="tier-list">
             <Col>
-              {Object.keys(tier).map(t => (
+              {Object.keys(tier).map((t) => (
                 <Row key={t}>
                   <Col className={`tier tier-label`} id={`${t}-label`} xs={1}>
                     {t.includes("p")
@@ -876,8 +877,8 @@ class Landing extends Component {
                   <Col
                     className={`tier drop-area`}
                     id={t}
-                    onDragOver={e => this.onDragOver(e)}
-                    onDrop={e => this.onDrop(e, t)}
+                    onDragOver={(e) => this.onDragOver(e)}
+                    onDrop={(e) => this.onDrop(e, t)}
                   >
                     <Row className="justify-content-left">{tier[t]}</Row>
                   </Col>
