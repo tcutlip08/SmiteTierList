@@ -497,7 +497,7 @@ class Landing extends Component {
   }
 
   responseGoogle = (response) => {
-    console.log(response.tokenId);
+    // console.log(response.tokenId);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
