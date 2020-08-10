@@ -627,11 +627,8 @@ class Landing extends Component {
             <Col className="item-container" md={2} lg={1} key={g.god.name}>
               <p id="god-name">{g.god.name}</p>
               <img
-                src={`../../assets/img/Gods/sol.jpg`}
-                // src={`https://web2.hirez.com/smite/god-cards/${g.god.name
-                //   .toLowerCase()
-                //   .split(" ")
-                //   .join("-")}.jpg`}
+                src={`https://web2.hirez.com/smite/god-cards/
+                  ${g.god.name.toLowerCase().split(" ").join("-")}.jpg`}
                 className={`${g.god.class}`}
                 id="god-image"
                 title={g.god.god}
