@@ -33,3 +33,7 @@
     border: double black 2px;
     border-radius: 5%;
 }
+
+#banana {
+    width: 100%;
+}

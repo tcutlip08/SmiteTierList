@@ -21,8 +21,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 class Landing extends Component {
@@ -31,21 +31,21 @@ class Landing extends Component {
       message: "",
       show: false,
       cancelBtn: false,
-      btnVal: ""
+      btnVal: "",
     },
     troll: {
       checking: false,
       godArray: [],
       currentUser: 0,
       userInfo: "",
-      totalUsers: 0
+      totalUsers: 0,
     },
     mode: "Duel",
     class: "All",
     page: "Public",
     loop: true,
     user: "",
-    tier: this.emptyTier()
+    tier: this.emptyTier(),
   };
 
   componentDidMount() {
@@ -60,43 +60,145 @@ class Landing extends Component {
   }
 
   getGodList() {
+    if (this.state.troll.checking) {
+      this.getAll();
+    } else if (this.state.page === "Public") {
+      this.getValid();
+    } else if (this.state.page === "Private") {
+      if (this.state.user) {
+        this.getPriv();
+      } else {
+        this.handleOpenModal("You must sign in to access this content", false);
+        this.setState({
+          page: "Public",
+        });
+      }
+    } else {
+      this.getBigName();
+    }
+  }
+
+  getAll() {
     axios
       .get("/api/gods")
-      .then(res => {
-        if (this.state.troll.checking) {
-          this.setTrollGodArray(res.data);
-        } else if (this.state.page === "Public") {
-          this.sepPubTierList(res.data);
-        } else if (this.state.page === "Private") {
-          if (this.state.user) {
-            this.sepPrivTierList(res.data);
-          } else {
-            this.handleOpenModal(
-              "You must sign in to access this content",
-              false
-            );
-            this.setState({
-              page: "Public"
-            });
-          }
-        } else {
-          this.bigNameUserList(res.data, this.state.page);
-        }
+      .then((res) => {
+        this.setTrollGodArray(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
-        this.getGodList();
+        this.getAll();
       });
+  }
+
+  getValid() {
+    axios
+      .get("/api/gods/public")
+      .then((res) => {
+        this.sepPubTierList(res.data);
+      })
+      .catch((err) => {
+        // console.log(err);
+        this.getValid();
+      });
+  }
+
+  getPriv() {
+    axios
+      .get(`/api/gods/private/${this.state.user._id}`)
+      .then((res) => {
+        this.sepPrivTierList(res.data);
+      })
+      .catch((err) => {
+        // console.log(err);
+        this.getPriv();
+      });
+  }
+
+  getBigName() {
+    let email;
+    if (this.state.page === "Rexsi") {
+      email = "sexcrexsi@gmail.com";
+      // email = "tcutlip08@gmail.com";
+    } else if (this.state.page === "Face") {
+      email = "facieeray@gmail.com";
+    }
+    axios
+      .get(`/api/gods/bigName/${email}`)
+      .then((res) => {
+        this.sepPrivTierList(res.data);
+      })
+      .catch((err) => {
+        // console.log(err);
+        this.handleOpenModal(
+          "Sorry there was an unexpected error, try again.",
+          false
+        );
+      });
+  }
+
+  monthToNum(m) {
+    if (m === "Jan") {
+      return 1;
+    } else if (m === "Feb") {
+      return 2;
+    } else if (m === "Mar") {
+      return 3;
+    } else if (m === "Apr") {
+      return 4;
+    } else if (m === "May") {
+      return 5;
+    } else if (m === "Jun") {
+      return 6;
+    } else if (m === "Jul") {
+      return 7;
+    } else if (m === "Aug") {
+      return 8;
+    } else if (m === "Sep") {
+      return 9;
+    } else if (m === "Oct") {
+      return 10;
+    } else if (m === "Nov") {
+      return 11;
+    } else if (m === "Dec") {
+      return 12;
+    } else {
+      return 0;
+    }
+  }
+
+  validateTime(date) {
+    let userDate = date.split(" ");
+    let userMonth = this.monthToNum(userDate[1]);
+    let userYear = parseInt(userDate[3]);
+    let currentDate = Date(Date.now()).split(" ");
+    let currentMonth = this.monthToNum(currentDate[1]);
+    let currentYear = parseInt(currentDate[3]);
+    if (currentYear === userYear) {
+      if (currentMonth - 6 > userMonth) {
+        return false;
+      } else {
+        return true;
+      }
+    } else if (currentYear - 1 === userYear) {
+      if (currentMonth + 6 > userMonth) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
   }
 
   sepPubTierList(gods) {
     let tier = this.emptyTier();
-    gods.map(god => {
+    gods.map((god) => {
       let mode = this.state.mode.toLowerCase();
       let users = 0;
       let average = 0;
-      god.rank.map(rank => {
-        if (god.rank.length > 0 && rank.mode[mode] !== 0 && !rank._id.banned) {
+      god.rank.map((rank) => {
+        let valid = this.validateTime(rank._id.updated);
+        if (rank.mode[mode] > 0 && valid) {
           users++;
           average = average + rank.mode[mode];
         }
@@ -111,33 +213,12 @@ class Landing extends Component {
 
   sepPrivTierList(gods) {
     let tier = this.emptyTier();
-    gods.map(god => {
-      god.rank.map(user => {
-        if (user._id._id === this.state.user._id) {
-          let val = user.mode[this.state.mode.toLowerCase()];
-          let rank = this.testValRank(val);
-          tier[rank].push({ god: god });
-        }
+    gods.map((god) => {
+      god.rank.map((user) => {
+        let val = user.mode[this.state.mode.toLowerCase()];
+        let rank = this.testValRank(val);
+        tier[rank].push({ god: god });
         return "";
-      });
-      return "";
-    });
-    this.setState({ tier: tier });
-  }
-
-  bigNameUserList(gods, bigName) {
-    let tier = this.emptyTier();
-    gods.map(god => {
-      god.rank.map(user => {
-        if (bigName === "Rexsi") {
-          if (user._id.email === "sexcrexsi@gmail.com") {
-            let val = user.mode[this.state.mode.toLowerCase()];
-            let rank = this.testValRank(val);
-            tier[rank].push({ god: god });
-            console.log(tier);
-          }
-          return "";
-        }
       });
       return "";
     });
@@ -150,8 +231,9 @@ class Landing extends Component {
         checking: true,
         godArray: [],
         currentUser: 0,
-        totalUsers: 0
-      }
+        totalUsers: 0,
+      },
+      loop: false,
     });
     this.getGodList();
   };
@@ -163,18 +245,18 @@ class Landing extends Component {
         godArray: [],
         currentUser: 0,
         totalUsers: 0,
-        loop: false
-      }
+      },
+      loop: false,
     });
     this.getGodList();
   };
 
-  setTrollGodArray = gods => {
+  setTrollGodArray = (gods) => {
     let troll = this.state.troll;
     troll.godArray = gods;
     troll.totalUsers = gods[0].rank.length;
     this.setState({
-      troll: troll
+      troll: troll,
     });
     this.displayTroll();
   };
@@ -185,7 +267,7 @@ class Landing extends Component {
     let userInfo = troll.godArray[0].rank[troll.currentUser]._id;
     troll.userInfo = userInfo;
     this.setState({ troll: troll });
-    this.state.troll.godArray.map(god => {
+    this.state.troll.godArray.map((god) => {
       let mode = this.state.mode.toLowerCase();
       let rank = this.testValRank(
         god.rank[this.state.troll.currentUser].mode[mode]
@@ -210,8 +292,8 @@ class Landing extends Component {
     if (!user.mod) {
       axios
         .put(`/api/user/ban/${user._id}`)
-        .then(res => {})
-        .catch(err => {
+        .then((res) => {})
+        .catch((err) => {
           // console.log(err);
         });
     } else {
@@ -219,7 +301,7 @@ class Landing extends Component {
     }
   };
 
-  nextTroll = val => {
+  nextTroll = (val) => {
     let troll = this.state.troll;
     if (troll.currentUser === troll.totalUsers - 1) {
       this.handleOpenModal("This is the end of the line", false);
@@ -253,7 +335,7 @@ class Landing extends Component {
     this.nextTroll("last");
   }
 
-  prevTroll = val => {
+  prevTroll = (val) => {
     let troll = this.state.troll;
     if (troll.currentUser === 0) {
       this.handleOpenModal("This is the end of the line", false);
@@ -328,7 +410,7 @@ class Landing extends Component {
         }
       }
       this.setState({
-        modal: { show: false, message: "", cancelBtn: false, btnVal: "" }
+        modal: { show: false, message: "", cancelBtn: false, btnVal: "" },
       });
     }
   }
@@ -350,7 +432,7 @@ class Landing extends Component {
     Object.keys(this.state.tier).map((key, k) => {
       let rank = 9 - k;
       Object.values(this.state.tier).map((value, v) => {
-        value.map(god => {
+        value.map((god) => {
           if (k === v) {
             tier.push({ god: god.god, rank: rank });
           }
@@ -369,18 +451,25 @@ class Landing extends Component {
       .put(`/api/gods/${god._id}`, {
         user: this.state.user._id,
         mode: this.state.mode.toLowerCase(),
-        rank: tier[0].rank
+        rank: tier[0].rank,
       })
-      .then(res => {
+      .then((res) => {
         tier.splice(0, 1);
         if (tier[0]) {
           this.handleOpenModal("This may take a minute...", false);
           this.updateGodTier(tier);
         } else {
-          this.handleCancelButton();
+          axios
+            .put(`/api/user/${this.state.user._id}`)
+            .then((res) => {
+              this.handleCancelButton();
+            })
+            .catch((err) => {
+              // console.log(err);
+            });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
       });
   }
@@ -407,16 +496,17 @@ class Landing extends Component {
     this.setState({ tier: newTier });
   }
 
-  responseGoogle = response => {
+  responseGoogle = (response) => {
+    // console.log(response.tokenId);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
-          response.uc.id_token
+          response.tokenId
       )
-      .then(res => {
+      .then((res) => {
         this.signInUser(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
       });
   };
@@ -424,10 +514,10 @@ class Landing extends Component {
   signInUser(user) {
     axios
       .get(`/api/user/google/${user.sub}`)
-      .then(res => {
+      .then((res) => {
         this.setState({ user: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         this.createUser(user);
       });
   }
@@ -436,12 +526,12 @@ class Landing extends Component {
     axios
       .put(`/api/user/google`, {
         email: user.email,
-        sub: user.sub
+        sub: user.sub,
       })
-      .then(res => {
+      .then((res) => {
         this.setState({ user: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
       });
   }
@@ -457,7 +547,7 @@ class Landing extends Component {
       b: [],
       c: [],
       d: [],
-      none: []
+      none: [],
     };
   }
 
@@ -465,7 +555,7 @@ class Landing extends Component {
     this.setState({ user: "", page: "Public", troll: { checking: false } });
   };
 
-  onDragOver = ev => {
+  onDragOver = (ev) => {
     ev.preventDefault();
   };
 
@@ -478,8 +568,8 @@ class Landing extends Component {
 
     let tier = this.emptyTier();
 
-    Object.keys(this.state.tier).forEach(t => {
-      this.state.tier[t].map(god => {
+    Object.keys(this.state.tier).forEach((t) => {
+      this.state.tier[t].map((god) => {
         if (god.god.name === name) {
           tier[newTier].push(god);
         } else {
@@ -490,70 +580,72 @@ class Landing extends Component {
     });
 
     this.setState({
-      tier: tier
+      tier: tier,
     });
   };
 
   handleOpenModal = (message, cancelBtn) => {
     this.setState({
-      modal: { show: true, message: message, cancelBtn: cancelBtn, btnVal: "" }
+      modal: { show: true, message: message, cancelBtn: cancelBtn, btnVal: "" },
     });
   };
 
   handleOkButton = () => {
     this.setState({
-      modal: { show: false, message: "", cancelBtn: false, btnVal: true }
+      modal: { show: false, message: "", cancelBtn: false, btnVal: true },
     });
   };
 
   handleCancelButton = () => {
     this.setState({
-      modal: { show: false, message: "", cancelBtn: false, btnVal: false }
+      modal: { show: false, message: "", cancelBtn: false, btnVal: false },
     });
   };
 
-  handlePubOrPriv = evt => {
+  handlePubOrPriv = (evt) => {
     this.setState({ page: evt, loop: false });
   };
 
-  handleClassType = evt => {
+  handleClassType = (evt) => {
     this.setState({ class: evt });
   };
 
-  handleModeType = evt => {
+  handleModeType = (evt) => {
     this.setState({ mode: evt, loop: false });
   };
 
   render() {
     let tier = this.emptyTier();
 
-    Object.keys(this.state.tier).map(t => {
-      this.state.tier[t].map(g => {
+    Object.keys(this.state.tier).map((t) => {
+      this.state.tier[t].map((g) => {
         if (
           g.god.name &&
           (this.state.class === g.god.class || this.state.class === "All")
         ) {
           tier[t].push(
-            <img
-              src={`http://www.smitetierlist.com/gods/${g.god.name
-                .toLowerCase()
-                .split(" ")
-                .join("")}.jpg`}
-              className={`item-container ${g.god.class}`}
-              key={g.god.name}
-              title={g.god.god}
-              draggable
-              onDragStart={e => this.onDragStart(e, g.god.name)}
-              alt={g.god.name}
-            />
+            <Col className="item-container" md={2} lg={1} key={g.god.name}>
+              <p id="god-name">{g.god.name}</p>
+              <img
+                src={`https://web2.hirez.com/smite/god-cards/
+                  ${g.god.name.toLowerCase().split(" ").join("-")}.jpg`}
+                className={`${g.god.class}`}
+                id="god-image"
+                title={g.god.god}
+                draggable
+                onDragStart={(e) => this.onDragStart(e, g.god.name)}
+                alt={g.god.name}
+              />
+            </Col>
           );
         }
         return "";
       });
-      Object.keys(this.state.tier).map(t => {
+      Object.keys(this.state.tier).map((t) => {
         tier[t] = tier[t].sort((a, b) => (a.key > b.key ? 1 : -1));
         return "";
       });
+      return "";
     });
 
     return (
@@ -583,20 +675,14 @@ class Landing extends Component {
               </span>
             </Col>
           </Row>
-          <Row className="text-center">
-            <Col>
+          <Row className="text-center justify-content-center">
+            <Col xs={4}>
               <Button
                 className="btn btn-secondary"
                 id="submit"
                 onClick={this.submitList}
               >
                 Submit
-              </Button>
-            </Col>
-            <Col>
-              {/*variant="outline-danger" instead of className="btn btn-danger"*/}
-              <Button className="btn btn-secondary" onClick={this.resetList}>
-                Reset
               </Button>
             </Col>
             {this.state.user.mod ? (
@@ -622,6 +708,13 @@ class Landing extends Component {
             ) : (
               ""
             )}
+            <Col xs={4}>
+              <Button className="btn btn-secondary" onClick={this.resetList}>
+                Reset
+              </Button>
+            </Col>
+          </Row>
+          <Row className="text-center justify-content-center" xs={6}>
             <Col>
               <DropdownButton
                 variant="secondary"
@@ -630,6 +723,7 @@ class Landing extends Component {
               >
                 <Dropdown.Item eventKey="Public">Public</Dropdown.Item>
                 <Dropdown.Item eventKey="Rexsi">Rexsi</Dropdown.Item>
+                <Dropdown.Item eventKey="Face">Face</Dropdown.Item>
                 <Dropdown.Item eventKey="Private">Private</Dropdown.Item>
               </DropdownButton>
             </Col>
@@ -662,34 +756,38 @@ class Landing extends Component {
           {this.state.troll.checking ? (
             <>
               <Row className="text-center">
-                <Col xs={1}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.prevTroll("first")}
-                  >
-                    {`First`}
-                  </Button>
+                <Col>
+                  <Row md={1} lg={3}>
+                    <Col md={{ order: 1 }} lg={{ order: 1 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.prevTroll("first")}
+                      >
+                        {`First`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 6 }} lg={{ order: 6 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.prevTroll(0)}
+                      >
+                        {`Prev Valid`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 12 }} lg={{ order: 12 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.prevTroll(1)}
+                      >
+                        {`< Prev`}
+                      </Button>
+                    </Col>
+                  </Row>
                 </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.prevTroll(0)}
-                  >
-                    {`Prev Valid`}
-                  </Button>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.prevTroll(1)}
-                  >
-                    {`< Prev`}
-                  </Button>
-                </Col>
-                <Col xs={2}>
+                <Col md={2}>
                   <Button
                     className="btn btn-secondary"
                     id="submit"
@@ -698,32 +796,36 @@ class Landing extends Component {
                     {`Troll`}
                   </Button>
                 </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.nextTroll(1)}
-                  >
-                    {`Next >`}
-                  </Button>
-                </Col>
-                <Col xs={2}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.nextTroll(0)}
-                  >
-                    {`Next Valid`}
-                  </Button>
-                </Col>
-                <Col xs={1}>
-                  <Button
-                    className="btn btn-secondary"
-                    id="submit"
-                    onClick={() => this.nextTroll("last")}
-                  >
-                    {`Last`}
-                  </Button>
+                <Col>
+                  <Row md={1} lg={3}>
+                    <Col md={{ order: 12 }} lg={{ order: 1 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.nextTroll(1)}
+                      >
+                        {`Next >`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 1 }} lg={{ order: 6 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.nextTroll(0)}
+                      >
+                        {`Next Valid`}
+                      </Button>
+                    </Col>
+                    <Col md={{ order: 6 }} lg={{ order: 12 }}>
+                      <Button
+                        className="btn btn-secondary"
+                        id="submit"
+                        onClick={() => this.nextTroll("last")}
+                      >
+                        {`Last`}
+                      </Button>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
               <Row className="troll text-center">
@@ -764,7 +866,7 @@ class Landing extends Component {
           )}
           <Row className="tier-list">
             <Col>
-              {Object.keys(tier).map(t => (
+              {Object.keys(tier).map((t) => (
                 <Row key={t}>
                   <Col className={`tier tier-label`} id={`${t}-label`} xs={1}>
                     {t.includes("p")
@@ -774,10 +876,10 @@ class Landing extends Component {
                   <Col
                     className={`tier drop-area`}
                     id={t}
-                    onDragOver={e => this.onDragOver(e)}
-                    onDrop={e => this.onDrop(e, t)}
+                    onDragOver={(e) => this.onDragOver(e)}
+                    onDrop={(e) => this.onDrop(e, t)}
                   >
-                    {tier[t]}
+                    <Row className="justify-content-left">{tier[t]}</Row>
                   </Col>
                 </Row>
               ))}

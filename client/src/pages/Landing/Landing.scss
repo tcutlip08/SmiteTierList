@@ -27,15 +27,36 @@ html {
   transition: all 5s;
 }
 
+#god-image {
+  height: 75px;
+  width: 75px;
+}
+
 .item-container {
   border-radius: 50%;
-  margin: 2px;
+  margin: 2px 0;
   cursor: move;
   cursor: grab;
   border-radius: 50%;
   &:hover {
-    opacity: 0.5;
+    img {
+      opacity: 0.5;
+    }
+
+    #god-name {
+      display: block;
+    }
   }
+}
+
+#god-name {
+  display: none;
+  background-color: white;
+  position: absolute;
+  top: -1rem;
+  left: -1rem;
+  border-radius: 15%;
+  padding: 2px;
 }
 
 .item-container,
@@ -215,4 +236,26 @@ img {
     padding: 5px;
     background-color: white;
   }
+}
+
+@media only screen and (max-width: 990px) {
+  .tier-label {
+    color: black;
+    padding: 5px;
+    font-size: 2rem;
+    text-align: center;
+    border-radius: 10%;
+  }
+
+  img {
+    width: 5rem;
+  }
+
+  .btn {
+    font-size: 2rem !important;
+  }
+}
+
+#banana {
+  width: 100%;
 }
