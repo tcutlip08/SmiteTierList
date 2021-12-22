@@ -17,8 +17,8 @@ class Modlist extends Component {
       "tcutlip08@gmail.com",
       "sexcrexsi@gmail.com",
       "jessman51386@gmail.com",
-      "rosykittenlove@gmail.com"
-    ]
+      "rosykittenlove@gmail.com",
+    ],
   };
 
   componentDidMount() {
@@ -30,17 +30,17 @@ class Modlist extends Component {
   getUsers() {
     axios
       .get("/api/user")
-      .then(res => {
+      .then((res) => {
         this.setState({ users: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         this.getUsers();
       });
   }
 
-  changeModCheckBox = event => {
+  changeModCheckBox = (event) => {
     const { name, checked } = event.target;
-    let newArray = this.state.users.map(user => {
+    let newArray = this.state.users.map((user) => {
       if (user._id === name && !this.state.authed.includes(user.email)) {
         user.mod = checked;
       }
@@ -49,9 +49,9 @@ class Modlist extends Component {
     this.setState({ users: newArray });
   };
 
-  changeBannedCheckBox = event => {
+  changeBannedCheckBox = (event) => {
     const { name, checked } = event.target;
-    let newArray = this.state.users.map(user => {
+    let newArray = this.state.users.map((user) => {
       if (user._id === name && !this.state.authed.includes(user.email)) {
         user.banned = checked;
       }
@@ -60,20 +60,20 @@ class Modlist extends Component {
     this.setState({ users: newArray });
   };
 
-  submit = users => {
+  submit = (users) => {
     let user = users[0];
     if (user) {
       if (!this.state.authed.includes(user.email)) {
         axios
           .put(`/api/user/mod/${user._id}`, {
             mod: user.mod,
-            banned: user.banned
+            banned: user.banned,
           })
-          .then(res => {
+          .then((res) => {
             users.splice(0, 1);
             this.submit(users);
           })
-          .catch(err => {
+          .catch((err) => {
             // console.log(err);
           });
       } else {
@@ -85,17 +85,18 @@ class Modlist extends Component {
     }
   };
 
-  responseGoogle = response => {
+  responseGoogle = (response) => {
+    console.log(response);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +
-          response.uc.id_token
+          response.tokenId
       )
-      .then(res => {
+      .then((res) => {
         this.setState({ user: res.data.email });
         this.checkAuth();
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
       });
   };
@@ -112,7 +113,7 @@ class Modlist extends Component {
         {this.state.auth ? (
           <>
             <Row className="justify-content-center">
-              {this.state.users.map(data => {
+              {this.state.users.map((data) => {
                 return (
                   <Col className="user" xs={3}>
                     <Row>

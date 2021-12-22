@@ -1,20 +1,21 @@
 const mongoose = require("mongoose");
 const db = require("../models");
+require("dotenv").config();
 
 // This file empties the Books collection and inserts the books below
 
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/smite_tier_list",
+  process.env.MONGODB_URI || "mongodb://localhost/SmiteTierList",
   {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
   }
 );
 
 db.User.remove({})
   .then()
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });
 
@@ -131,16 +132,16 @@ const godsSeed = [
   { name: "Thoth", rank: [], class: "Mage" },
   { name: "Vulcan", rank: [], class: "Mage" },
   { name: "Zeus", rank: [], class: "Mage" },
-  { name: "Zhong Qui", rank: [], class: "Mage" }
+  { name: "Zhong Qui", rank: [], class: "Mage" },
 ];
 
 db.Gods.remove({})
   .then(() => db.Gods.collection.insertMany(godsSeed))
-  .then(data => {
+  .then((data) => {
     console.log(data.result.n + " records inserted!");
     process.exit(0);
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
     process.exit(1);
   });
