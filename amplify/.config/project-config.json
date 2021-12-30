@@ -1,0 +1,17 @@
+{
+  "providers": [
+    "awscloudformation"
+  ],
+  "projectName": "SmiteTierList",
+  "version": "3.1",
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "react",
+    "config": {
+      "SourceDir": "C:\\Users\\tcutl\\OneDrive\\Documents\\GitHub\\SmiteTierList",
+      "DistributionDir": "Client\\Build",
+      "BuildCommand": "npm run build",
+      "StartCommand": "npm run dev"
+    }
+  }
+}
