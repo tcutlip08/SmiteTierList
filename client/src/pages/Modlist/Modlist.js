@@ -86,7 +86,6 @@ class Modlist extends Component {
   };
 
   responseGoogle = (response) => {
-    console.log(response);
     axios
       .get(
         "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" +

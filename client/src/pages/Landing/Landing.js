@@ -40,7 +40,7 @@ class Landing extends Component {
       userInfo: "",
       totalUsers: 0,
     },
-    mode: "Duel",
+    mode: "Conquest",
     class: "All",
     page: "Public",
     loop: true,
@@ -534,28 +534,28 @@ class Landing extends Component {
           (this.state.class === g.god.class || this.state.class === "All")
         ) {
           tier[t].push(
-            // <img
-            //   src={`http://www.smitetierlist.com/gods/${g.god.name
-            //     .toLowerCase()
-            //     .split(" ")
-            //     .join("")}.jpg`}
-            //   className={`item-container ${g.god.class}`}
-            //   key={g.god.name}
-            //   title={g.god.god}
-            //   draggable
-            //   onDragStart={(e) => this.onDragStart(e, g.god.name)}
-            //   alt={g.god.name}
-            // />
-            <span
+            <img
+              src={`https://webcdn.hirezstudios.com/smite/god-cards/${g.god.name
+                .toLowerCase()
+                .split(" ")
+                .join("-")}.jpg`}
               className={`item-container ${g.god.class}`}
               key={g.god.name}
               title={g.god.god}
               draggable
               onDragStart={(e) => this.onDragStart(e, g.god.name)}
               alt={g.god.name}
-            >
-              {g.god.name}
-            </span>
+            />
+            // <span
+            //   className={`item-container ${g.god.class}`}
+            //   key={g.god.name}
+            //   title={g.god.god}
+            //   draggable
+            //   onDragStart={(e) => this.onDragStart(e, g.god.name)}
+            //   alt={g.god.name}
+            // >
+            //   {g.god.name}
+            // </span>
           );
         }
         return "";
