@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/tcutlip08/SmiteTierList#readme",
   "dependencies": {
+    "amplify": "0.0.11",
     "concurrently": "^5.1.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
