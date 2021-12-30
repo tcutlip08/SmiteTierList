@@ -1,20 +1,21 @@
 const mongoose = require("mongoose");
 const db = require("../models");
+require("dotenv").config();
 
 // This file empties the Books collection and inserts the books below
 
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/smite_tier_list",
+  process.env.MONGODB_URI || "mongodb://localhost/SmiteTierList",
   {
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
   }
 );
 
 db.User.remove({})
   .then()
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });
 
@@ -49,7 +50,7 @@ const godsSeed = [
   { name: "Geb", rank: [], class: "Guardian" },
   { name: "Jormungandr", rank: [], class: "Guardian" },
   { name: "Khepri", rank: [], class: "Guardian" },
-  { name: "Kumbakharna", rank: [], class: "Guardian" },
+  { name: "Kumbhakarna", rank: [], class: "Guardian" },
   { name: "Kuzenbo", rank: [], class: "Guardian" },
   { name: "Sobek", rank: [], class: "Guardian" },
   { name: "Sylvanus", rank: [], class: "Guardian" },
@@ -63,7 +64,7 @@ const godsSeed = [
   { name: "Apollo", rank: [], class: "Hunter" },
   { name: "Artemis", rank: [], class: "Hunter" },
   { name: "Cernunnos", rank: [], class: "Hunter" },
-  { name: "Chernabog", rank: [], class: "Hunter" },
+  { name: "Chernobog", rank: [], class: "Hunter" },
   { name: "Chiron", rank: [], class: "Hunter" },
   { name: "Cupid", rank: [], class: "Hunter" },
   { name: "Hachiman", rank: [], class: "Hunter" },
@@ -111,10 +112,10 @@ const godsSeed = [
   { name: "Discordia", rank: [], class: "Mage" },
   { name: "Freya", rank: [], class: "Mage" },
   { name: "Hades", rank: [], class: "Mage" },
-  { name: "Hebo", rank: [], class: "Mage" },
+  { name: "He bo", rank: [], class: "Mage" },
   { name: "Hel", rank: [], class: "Mage" },
   { name: "Hera", rank: [], class: "Mage" },
-  { name: "Isis", rank: [], class: "Mage" },
+  { name: "Eset", rank: [], class: "Mage" },
   { name: "Janus", rank: [], class: "Mage" },
   { name: "Kukulkan", rank: [], class: "Mage" },
   { name: "Merlin", rank: [], class: "Mage" },
@@ -131,16 +132,16 @@ const godsSeed = [
   { name: "Thoth", rank: [], class: "Mage" },
   { name: "Vulcan", rank: [], class: "Mage" },
   { name: "Zeus", rank: [], class: "Mage" },
-  { name: "Zhong Qui", rank: [], class: "Mage" }
+  { name: "Zhong Kui", rank: [], class: "Mage" },
 ];
 
 db.Gods.remove({})
   .then(() => db.Gods.collection.insertMany(godsSeed))
-  .then(data => {
+  .then((data) => {
     console.log(data.result.n + " records inserted!");
     process.exit(0);
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
     process.exit(1);
   });
