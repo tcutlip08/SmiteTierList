@@ -44,6 +44,7 @@ class Landing extends Component {
     class: "All",
     page: "Public",
     loop: true,
+    loopCount: 0,
     user: "",
     tier: this.emptyTier(),
   };
@@ -53,7 +54,7 @@ class Landing extends Component {
   }
 
   componentDidUpdate() {
-    if (!this.state.loop) {
+    if (!this.state.loop && this.state.loopCount < 5) {
       this.setState({ loop: true });
       this.getGodList();
     }
@@ -63,6 +64,7 @@ class Landing extends Component {
     axios
       .get("/api/gods")
       .then((res) => {
+        this.setState({ loopCount: 0 });
         if (this.state.troll.checking) {
           this.setTrollGodArray(res.data);
         } else if (this.state.page === "Public") {
@@ -85,7 +87,12 @@ class Landing extends Component {
       })
       .catch((err) => {
         // console.log(err);
-        this.getGodList();
+        if (this.state.loopCount < 5) {
+          this.setState({ loopCount: this.state.loopCount + 1 });
+          this.getGodList();
+        } else {
+          console.log(err);
+        }
       });
   }
 
